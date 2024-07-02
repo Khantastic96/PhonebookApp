@@ -166,3 +166,4 @@ cython_debug/
 .idea/modules.xml
 .idea/PhonebookApp.iml
 .idea/vcs.xml
+.idea/.gitignore
