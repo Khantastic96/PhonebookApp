@@ -5,18 +5,25 @@ Created on Tue Jul  9 14:02:19 2024
 @author: Sharek Khan
 """
 
+# Import modules
+from datetime import date
+
+# Define constants
+DAYS_IN_MONTH = 30.4375
+DAYS_IN_YEAR = 365.25
+
 class Record:
     # Define the init method/class constructor
     def __init__(self):
-        self.__name
-        self.__phone_number
-        self.__email
-        self.__address
-        self.__city
-        self.__province
-        self.__postal_code
-        self.__date_of_birth
-        self.__age
+        self.__name = ""
+        self.__phone_number = ""
+        self.__email = ""
+        self.__address = ""
+        self.__city = ""
+        self.__province = ""
+        self.__postal_code = ""
+        self.__date_of_birth = ""
+        self.__age = 0.0
         
     # Define the accessor to the name field
     def get_name(self):
@@ -85,8 +92,33 @@ class Record:
     # Define the mutator to the date_of_birth
     def set_date_of_birth(self, new_date_of_birth):
         self.__date_of_birth = new_date_of_birth
+        self.__age = self.calculate_age()
         
     # Define the method to calculate the age
     def calculate_age(self):
-        # Calculation logic
-        return 1 
+        # Get current date, delimit it by '/'
+        today = date.today()
+        today_delim = today.strftime("%d/%m/%Y").split('/')
+        
+        # Delimit date of birth by '/'
+        dob_delim = self.__date_of_birth.split('/')
+        
+        # Substitute values as integers
+        today_d = int(today_delim[0])
+        today_m = int(today_delim[1])
+        today_y = int(today_delim[2])
+        dob_d = int(dob_delim[0])
+        dob_m = int(dob_delim[1])
+        dob_y = int(dob_delim[2])
+        
+        # Calculate the difference to find the age
+        today_in_days = self.calculate_date_in_days(today_d, today_m, today_y)
+        dob_in_days = self.calculate_date_in_days(dob_d, dob_m, dob_y)
+        difference = today_in_days - dob_in_days
+        
+        # Calculate and return the age
+        return difference / DAYS_IN_YEAR
+        
+    # Define the method to calculate a date in accumulated days
+    def calculate_date_in_days(self, date, month, year):
+        return date + (month-1)*(DAYS_IN_MONTH) + (year-1)*(DAYS_IN_YEAR)
