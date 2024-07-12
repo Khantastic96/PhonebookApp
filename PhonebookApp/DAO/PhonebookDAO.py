@@ -5,10 +5,13 @@ Created on Tue Jul  9 15:52:02 2024
 @author: Sharek Khan
 """
 
+# Import modules
+from Entities import Phonebook
+
 class PhonebookDAO:
     # Define the init method/class constructor
     def __init__(self):
-        self.__phonebook
+        self.__phonebook = Phonebook()
         
     # Define the method to insert a new phonebook entry to the database
     def insert_phonebook(self):

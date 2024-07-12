@@ -122,3 +122,12 @@ class Record:
     # Define the method to calculate a date in accumulated days
     def calculate_date_in_days(self, date, month, year):
         return date + (month-1)*(DAYS_IN_MONTH) + (year-1)*(DAYS_IN_YEAR)
+    
+    # Define to method to stringify an object when called through console ouput
+    def __str__(self):
+        record = (self.__name + ", " + self.__age +
+        "\n\t#: " + self.__phone_number +
+        "\n\t@: " + self.__email + 
+        "\n\t^: " + self.__address + ", " + self.__city + ", " + self.__province + " " + self.__postal_code +
+        "\n\t!: " + self.__date_of_birth)
+        return record

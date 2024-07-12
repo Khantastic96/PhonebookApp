@@ -5,25 +5,24 @@ Created on Tue Jul  9 14:02:55 2024
 @author: Sharek Khan
 """
 
-
 class User:
     # Define the init method/class constructor
     def __init__(self, username, password):
-        self._username = username
-        self._password = password
+        self.set_username(username)
+        self.set_password(password)
 
     # Define the accessor to the username field
-    def getUsername(self):
-        return self._username
+    def get_username(self):
+        return self.__username
 
     # Define the accessor to the password field
-    def getPassword(self):
-        return self._password
+    def get_password(self):
+        return self.__password
 
     # Define the mutator to the username field
-    def setUsername(self, newUsername):
-        self._username = newUsername
+    def set_username(self, new_username):
+        self.__username = new_username
 
     # Define the mutator to the password field
-    def setPassword(self, newPassword):
-        self._password = newPassword
+    def set_password(self, new_password):
+        self.__password = new_password

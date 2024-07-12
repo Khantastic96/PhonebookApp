@@ -5,10 +5,13 @@ Created on Tue Jul  9 16:05:44 2024
 @author: Sharek Khan
 """
 
+# Import modules
+from Entities import User
+
 class UserDAO:
     # Define the init method/class constructor
     def __init__(self):
-        self.__user
+        self.__user = User()
         
     # Define the method to insert a new user entry to the database
     def insert_user(self):
