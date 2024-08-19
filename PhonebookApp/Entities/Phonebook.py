@@ -39,12 +39,41 @@ class Phonebook:
     # Define the method to add a new record to the phonebook
     def add_record(self, record):
         # Insertion logic
+        record = Record();
+        
+        name = input('Enter your name: ');
+        print('/n');
+        phoneNumber = input('Enter your phone number: ');
+        print('/n');
+        email = input('Enter your email address: ');
+        print('/n'); 
+        address = input('Enter your street address: ');
+        print('/n'); 
+        city = input('Enter your city: ');
+        print('/n'); 
+        province = input('Enter your province: ');
+        print('/n'); 
+        postal_code = input('Enter your postal code: ');
+        print('/n');
+        date_of_birth = input('Enter your date of birth: ');
+        print('/n'); 
+        
+        record.set_name(name);
+        record.set_phone_number(phoneNumber);
+        record.set_email(email);
+        record.set_address(address);
+        record.set_city(city);
+        record.set_province(province);
+        record.set_postal_code(postal_code);
+        record.set_date_of_birth(date_of_birth);
+               
         return 1
     
     # Define the method to list existing records in the phonebook
     def list_records(self):
         # Listing logic
-        print("Placeholder text...")
+        for x in self.__records:
+            print(x);
         
     # Define the method to modify existing records in the phonebook
     def modify_record(self):
