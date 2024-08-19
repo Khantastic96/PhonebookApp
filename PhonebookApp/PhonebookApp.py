@@ -12,13 +12,79 @@ from Entities import Record
 from DAO import PhonebookDAO
 from DAO import UserDAO
 
+# Define global constants
+CLEAR_SCREEN = "\033[H\033[J"
+
 # Define the main function
 def main():
-    # Do something here...
-    print("Hello World!")
+    # Define local CONSTANTS
+    ADD = 1
+    LIST = 2
+    EXIT = 3
+    MODIFY = 4
+    SEARCH = 5
+    DELETE = 6
+    
+    # Initialize variables
+    username = ""
+    password = ""
+    is_authenticated = False
+    input_choice = 0
+    
+    # Authenticate user
+    while is_authenticated != True:
+        # Login logic
+        login_menu()
+        username = input("USERNAME: ")
+        password = input("PASSWORD: ")
         
+        # Authenticate
+        is_authenticated = True
+        
+        # Check login credentials
+        if is_authenticated != True:
+            print("ERROR: Login credentials invalid!")
+            input("Press ENTER to continue...")
+        else:
+            # Run through application
+            while input_choice != EXIT:
+                # Application logic
+                main_menu()
+                input_choice = int(input("INPUT (1-6): "))
+                # Check input selection
+                if input_choice == ADD:
+                    # Add record logic
+                    add_menu()
+                    input("Press ENTER to continue...")
+                elif input_choice == LIST:
+                    # List records logic
+                    list_menu()
+                    input("Press ENTER to continue...")
+                elif input_choice == EXIT:
+                    # Exit logic
+                    print("Saving your changes and logging out.")
+                    input("Press ENTER to continue...")
+                elif input_choice == MODIFY:
+                    # Modify record logic
+                    modify_menu()
+                    input("Press ENTER to continue...")
+                elif input_choice == SEARCH:
+                    # Search records logic
+                    search_menu()
+                    input("Press ENTER to continue...")
+                elif input_choice == DELETE:
+                    # Delete record logic
+                    delete_menu()
+                    input("Press ENTER to continue...")
+                else:
+                    # Invalid entry
+                    print("ERROR: Invalid entry!")
+                    print("Please enter a number from the range specified.")
+                    input("Press ENTER to continue...")
+                
 # Define the menu header function
 def menu_header():
+    print(CLEAR_SCREEN, end="")
     print("**********WELCOME TO PHONEBOOK**********")
     
 # Define the menu footer function
@@ -36,9 +102,39 @@ def login_menu():
 def main_menu():
     menu_header()
     print("                 MENU")
-    print("    1.Add New     2.List      3.Exit")
+    print("    1.Add         2.List      3.Exit")
     print("    4.Modify      5.Search    6.Delete")
     menu_footer()    
+
+# Define the add record menu function
+def add_menu():
+    menu_header()
+    print("                ADD NEW")
+    menu_footer()
+    
+# Define the list records menu function
+def list_menu():
+    menu_header()
+    print("                 LIST")
+    menu_footer()
+    
+# Define the modify record menu function
+def modify_menu():
+    menu_header()
+    print("                MODIFY")
+    menu_footer()
+    
+# Define the search records menu function
+def search_menu():
+    menu_header()
+    print("                SEARCH")
+    menu_footer()
+    
+# Define the delete record menu function
+def delete_menu():
+    menu_header()
+    print("                DELETE")
+    menu_footer()
 
 # Invoke the main function
 main()

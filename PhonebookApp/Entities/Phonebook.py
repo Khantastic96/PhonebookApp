@@ -6,8 +6,8 @@ Created on Tue Jul  9 14:01:19 2024
 """
 
 # Import modules
-import User
-import Record
+from Entities import User
+from Entities import Record
 
 class Phonebook:
     # Define the init method/class constructor
