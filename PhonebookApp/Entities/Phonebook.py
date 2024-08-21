@@ -39,35 +39,10 @@ class Phonebook:
     # Define the method to add a new record to the phonebook
     def add_record(self, record):
         # Insertion logic
-        record = Record();
-        
-        name = input('Enter your name: ');
-        print('/n');
-        phoneNumber = input('Enter your phone number: ');
-        print('/n');
-        email = input('Enter your email address: ');
-        print('/n'); 
-        address = input('Enter your street address: ');
-        print('/n'); 
-        city = input('Enter your city: ');
-        print('/n'); 
-        province = input('Enter your province: ');
-        print('/n'); 
-        postal_code = input('Enter your postal code: ');
-        print('/n');
-        date_of_birth = input('Enter your date of birth: ');
-        print('/n'); 
-        
-        record.set_name(name);
-        record.set_phone_number(phoneNumber);
-        record.set_email(email);
-        record.set_address(address);
-        record.set_city(city);
-        record.set_province(province);
-        record.set_postal_code(postal_code);
-        record.set_date_of_birth(date_of_birth);
-               
-        return 1
+        if record != None:
+            self.__records.append(record)
+            return 1
+        return 0
     
     # Define the method to list existing records in the phonebook
     def list_records(self):
@@ -76,16 +51,29 @@ class Phonebook:
             print(x);
         
     # Define the method to modify existing records in the phonebook
-    def modify_record(self):
+    def modify_record(self, record):
         # Modifying logic
+        index = self.__records.index(record)
+        self.__records[index].set_name(record.get_name())
+        self.__records[index].set_phone_number(record.get_phone_number())
+        self.__records[index].set_email(record.get_email())
+        self.__records[index].set_address(record.get_address())
+        self.__records[index].set_city(record.get_city())
+        self.__records[index].set_province(record.get_province())
+        self.__records[index].set_postal_code(record.get_postal_code())
+        self.__records[index].set_date_of_birth(record.get_date_of_birth())
         return 1
     
     # Define the method to search existing records in the phonebook
-    def search_records(self):
+    def search_records(self, name):
         # Searching logic
-        return 1
+        for record in self.__records:
+            if record.getName() == name:
+                return record
+        return None
     
     # Define the method to delete an existing record from the phonebook
-    def delete_record(self):
+    def delete_record(self, record):
         # Deleting logic
+        self.__records.remove(record)
         return 1
