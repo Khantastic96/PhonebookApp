@@ -6,7 +6,7 @@ Created on Tue Jul  9 15:52:02 2024
 """
 
 # Import modules
-from Entities import Phonebook
+from Entities.Phonebook import Phonebook
 
 class PhonebookDAO:
     # Define the init method/class constructor

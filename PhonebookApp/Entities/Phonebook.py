@@ -6,17 +6,14 @@ Created on Tue Jul  9 14:01:19 2024
 """
 
 # Import modules
-from Entities import User
-from Entities import Record
+from .User import User
+from .Record import Record
 
 class Phonebook:
     # Define the init method/class constructor
-    def __init__(self, user, records):
-        # Initialize User
-        self.set_user(user)
-        
-        # Initialize Records
-        self.set_records(records)
+    def __init__(self):
+        self.__user = User()
+        self.__records = []
     
     # Define the accessor for the user field
     def get_user(self):

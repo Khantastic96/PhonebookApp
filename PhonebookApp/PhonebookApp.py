@@ -6,11 +6,8 @@ Created on Sun Jun 30 20:49:44 2024
 """
 
 # Import modules
-from Entities import Phonebook
-from Entities import User
-from Entities import Record
-from DAO import PhonebookDAO
-from DAO import UserDAO
+from Entities import Phonebook, Record, User
+from DAO import PhonebookDAO, RecordDAO, UserDAO
 
 # Define global constants
 CLEAR_SCREEN = "\033[H\033[J"
@@ -55,26 +52,44 @@ def main():
                 if input_choice == ADD:
                     # Add record logic
                     add_menu()
+                    # Start code here
+                    
+                    # End code here
                     input("Press ENTER to continue...")
                 elif input_choice == LIST:
                     # List records logic
                     list_menu()
+                    # Start code here
+                    
+                    # End code here
                     input("Press ENTER to continue...")
                 elif input_choice == EXIT:
                     # Exit logic
+                    # Start code here
+                    
+                    # End code here
                     print("Saving your changes and logging out.")
                     input("Press ENTER to continue...")
                 elif input_choice == MODIFY:
                     # Modify record logic
                     modify_menu()
+                    # Start code here
+                    
+                    # End code here
                     input("Press ENTER to continue...")
                 elif input_choice == SEARCH:
                     # Search records logic
                     search_menu()
+                    # Start code here
+                    
+                    # End code here
                     input("Press ENTER to continue...")
                 elif input_choice == DELETE:
                     # Delete record logic
                     delete_menu()
+                    # Start code here
+                    
+                    # End code here
                     input("Press ENTER to continue...")
                 else:
                     # Invalid entry

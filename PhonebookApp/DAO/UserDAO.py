@@ -6,7 +6,7 @@ Created on Tue Jul  9 16:05:44 2024
 """
 
 # Import modules
-from Entities import User
+from Entities.User import User
 
 class UserDAO:
     # Define the init method/class constructor
