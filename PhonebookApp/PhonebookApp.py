@@ -6,6 +6,7 @@ Created on Sun Jun 30 20:49:44 2024
 """
 
 # Import modules
+from asyncio.windows_events import NULL
 from Entities import Phonebook, Record, User
 from DAO import PhonebookDAO, RecordDAO, UserDAO
 
@@ -27,7 +28,9 @@ def main():
     password = ""
     is_authenticated = False
     input_choice = 0
-    
+    record = Record()
+    phonebook = Phonebook()
+
     # Authenticate user
     while is_authenticated != True:
         # Login logic
@@ -53,14 +56,39 @@ def main():
                     # Add record logic
                     add_menu()
                     # Start code here
+                    name = input("Enter name: ")
+                    record.set_name(name)
                     
+                    phone_number = input("Enter Phone Number: ")
+                    record.set_phone_number(phone_number)
+                    
+                    email = input("Enter email: ")
+                    record.set_email(email)
+                    
+                    address = input("Enter Address: ")
+                    record.set_address(address)
+                    
+                    city = input("Enter city: ")
+                    record.set_city(city)
+
+                    province = input("Enter province/state: ")
+                    record.set_province(province)
+
+                    postal_code = input("Enter Postal Code/ZipCode: ")
+                    record.set_postal_code(postal_code)
+                    
+                    dateofbirth = input("Enter Date of Birth: ")
+                    record.set_date_of_birth(dateofbirth)
+                    
+                    phonebook.add_record(record)
                     # End code here
+                    
                     input("Press ENTER to continue...")
                 elif input_choice == LIST:
                     # List records logic
                     list_menu()
                     # Start code here
-                    
+                    phonebook.list_records()
                     # End code here
                     input("Press ENTER to continue...")
                 elif input_choice == EXIT:
@@ -74,7 +102,40 @@ def main():
                     # Modify record logic
                     modify_menu()
                     # Start code here
+                    name = input("Search for the name of the person you want to fetch: ")
+                    mod_record = phonebook.search_records(name)
                     
+                    if mod_record != None :
+                   
+                        name = input("Enter name: ")
+                        mod_record.set_name(name)
+                    
+                        phone_number = input("Enter Phone Number: ")
+                        mod_record.set_phone_number(phone_number)
+                    
+                        email = input("Enter email: ")
+                        mod_record.set_email(email)
+                    
+                        address = input("Enter Address: ")
+                        mod_record.set_address(address)
+                    
+                        city = input("Enter city: ")
+                        mod_record.set_city(city)
+
+                        province = input("Enter province/state: ")
+                        mod_record.set_province(province)
+
+                        postal_code = input("Enter Postal Code/ZipCode: ")
+                        mod_record.set_postal_code(postal_code)
+                    
+                        dateofbirth = input("Enter Date of Birth: ")
+                        mod_record.set_date_of_birth(dateofbirth)
+                        
+                        phonebook.modify_record(mod_record)
+                        
+                    else :
+                        input_choice == EXIT
+
                     # End code here
                     input("Press ENTER to continue...")
                 elif input_choice == SEARCH:

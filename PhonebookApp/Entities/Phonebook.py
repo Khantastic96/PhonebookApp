@@ -65,7 +65,7 @@ class Phonebook:
     def search_records(self, name):
         # Searching logic
         for record in self.__records:
-            if record.getName() == name:
+            if record.get_name() == name:
                 return record
         return None
     

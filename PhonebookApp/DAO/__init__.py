@@ -6,6 +6,6 @@ Created on Fri Aug 23 16:15:16 2024
 """
 
 # __init__.py in DAO
-from .PhoneBookDAO import PhonebookDAO
+from .PhonebookDAO import PhonebookDAO
 from .RecordDAO import RecordDAO
 from .UserDAO import UserDAO

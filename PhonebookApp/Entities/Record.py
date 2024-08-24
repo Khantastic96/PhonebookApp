@@ -7,6 +7,7 @@ Created on Tue Jul  9 14:02:19 2024
 
 # Import modules
 from datetime import date
+import math
 
 # Define constants
 DAYS_IN_MONTH = 30.4375
@@ -125,7 +126,7 @@ class Record:
     
     # Define to method to stringify an object when called through console ouput
     def __str__(self):
-        record = (self.__name + ", " + self.__age +
+        record = (self.__name + ", " + str(math.floor(self.__age)) +
         "\n\t#: " + self.__phone_number +
         "\n\t@: " + self.__email + 
         "\n\t^: " + self.__address + ", " + self.__city + ", " + self.__province + " " + self.__postal_code +
