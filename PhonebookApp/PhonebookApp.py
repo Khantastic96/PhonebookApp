@@ -42,6 +42,7 @@ def main():
         
         # Authenticate
         is_authenticated = True
+        input_choice = 0
         
         # Check login credentials
         if is_authenticated != True:
