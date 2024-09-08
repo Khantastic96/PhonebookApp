@@ -138,7 +138,7 @@ def main():
                             
                             phonebook.modify_record(record)
                             print("")
-                            print("...Record updated!")
+                            print("...Record modified!")
                         else :
                             print("")
                             print("...Record not found!")
@@ -167,9 +167,15 @@ def main():
                         record = phonebook.search_records(name)
                         
                         if record != None:
-                            phonebook.delete_record(record)
-                            print("")
-                            print("...Record deleted!")
+                            # Confirm deletion
+                            confirm = input("CONFIRM DELETION? (Y/N): ")
+                            if confirm.upper() == "Y":
+                                phonebook.delete_record(record)
+                                print("")
+                                print("...Record deleted!")
+                            else:
+                                print("")
+                                print("...Deletion aborted!")
                         else:
                             print("")
                             print("...Record not found!")
