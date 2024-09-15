@@ -92,11 +92,51 @@ class UserDAO:
         return 1
     
     # Define the method to update an existing user entry in the database
-    def update_user(self):
+    def update_user(self, user):
         # Updating logic
+        
+          # Create a new client and connect to the server
+        client = MongoClient(URI, server_api=ServerApi('1'))
+        
+        # Send a ping to confirm a successful connection
+        try:
+            # Get databases
+            database = client.get_database("PhonebookAppDB")
+            
+            collection = database.get_collection("Users")
+
+            query_filter = { "username": user.get_username }
+            update_operation = { "$set": { "username": user.set_username }, 
+                                 "$set": { "password": user.set_password } }
+            
+            result = collection.update_one(query_filter, update_operation)
+            
+            print(result.modified_count)
+        
+        except Exception as e:
+            print(e)
+        
         return 1
     
     # Define the method to delete an existing user entry from the database
-    def delete_user(self):
+    def delete_user(self, user):
         # Deleting logic
+        
+        # Create a new client and connect to the server
+        client = MongoClient(URI, server_api=ServerApi('1'))
+        
+        # Send a ping to confirm a successful connection
+        try:
+            # Get databases
+            database = client.get_database("PhonebookAppDB")
+            
+            collection = database.get_collection("Users")
+
+            query_filter = { "username": user.get_username }
+            result = collection.delete_one(query_filter)
+            print(result.deleted_count)
+        
+        except Exception as e:
+            print(e)
+        
         return 1
