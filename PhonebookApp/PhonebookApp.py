@@ -47,11 +47,10 @@ def main():
             username = input("USERNAME: ")
             password = input("PASSWORD: ")
             
-            # Authenticate
-            # Start code here
-            is_authenticated = True
+            # Authenticate with MongoDB cluster
+            userDAO = UserDAO()
+            is_authenticated = userDAO.authenticate_user(username, password)
             post_input_choice = 0
-            # End code here
             
             # Check login credentials
             if is_authenticated != True:
@@ -196,14 +195,26 @@ def main():
             username = input("Enter USERNAME: ")
             password = input("Enter PASSWORD: ")
             
-            # Start code here
+            # Create a new user
+            user = User()
+            user.set_first_name(first_name)
+            user.set_last_name(last_name)
+            user.set_phone_number(phone_number)
+            user.set_username(username)
+            user.set_password(password)
+            user.generate_user_id()
             
-            print("")
-            print("...User registered!")
-            # End code here
+            # Register with MongoDB cluster
+            userDAO = UserDAO()
+            if userDAO.insert_user(user) == 1:            
+                print("")
+                print("...User registered!")
+            else:
+                print("")
+                print("...User not registered!")
             input("Press ENTER to continue...")
         elif pre_input_choice == QUIT:
-            # Quit the application
+            # Quit the application and save changes to MongoDB Cluster
             # Start code here
             
             print("")

@@ -8,16 +8,28 @@ Created on Tue Jul  9 14:02:55 2024
 class User:
     # Define the init method/class constructor
     def __init__(self):
-        self.__userid = ""
-        self.__fname = ""
-        self.__lname = ""
+        self.__user_id = ""
+        self.__first_name = ""
+        self.__last_name = ""
         self.__phone_number = ""
         self.__username = ""
         self.__password = ""
     
-    # Define the accessor to the userid field
-    def get_userid(self):
-        return self.__userid
+    # Define the accessor to the user_id field
+    def get_user_id(self):
+        return self.__user_id
+
+    # Define the accessor to the first_name field
+    def get_first_name(self):
+        return self.__first_name
+
+    # Define the accessor to the last_name field
+    def get_last_name(self):
+        return self.__last_name
+    
+    # Define the accessor to the phone_number field
+    def get_phone_number(self):
+        return self.__phone_number
 
     # Define the accessor to the username field
     def get_username(self):
@@ -27,45 +39,41 @@ class User:
     def get_password(self):
         return self.__password
     
-     # Define the accessor to the fname field
-    def get_fname(self):
-        return self.__fname
+    # Define the generator for the user_id field
+    def generate_user_id(self):
+        l_name = self.get_last_name()
+        p_number = self.get_phone_number()
+        n = 0
+        
+        # Iterate through first 3 characters for last_name
+        while(n < 3):
+            # Append to user_id
+            self.__user_id = self.__user_id + l_name[n].upper()
+            # Increment the value of n
+            n = n + 1
+            
+        # Reset n
+        n = 4
+        
+        # Iterate through last 4 characters for phone_number
+        while(n > 0):
+            # Append to user_id
+            self.__user_id = self.__user_id + p_number[len(p_number) - n]
+            # Increment the value of n
+            n = n - 1
+        print(self.__user_id)
+        
+    # Define the accessor to the first_name field
+    def set_first_name(self, new_first_name):
+        self.__first_name = new_first_name
 
-    # Define the accessor to the lname field
-    def get_lname(self):
-        return self.__lname
+    # Define the accessor to the last_name field
+    def set_last_name(self, new_last_name):
+        self.__last_name = new_last_name
     
-    # Define the accessor to the lname field
-    def get_phone_number(self):
-        return self.__phone_number
-
-    # Define the userid field
-    def gen_userid(self):
-        lname = self.get_lname()
-        phone_num = self.get_phone_number()
-        
-        N = 3
-        # iterate loop
-        while(N > 0):
- 
-            # print character
-            print(lname[-N], end='')
- 
-            # decrement the value of N
-            N = N-1
-        
-        P = 4
-        # iterate loop
-        while(P > 0):
- 
-            # print character
-            print(phone_num[-P], end='')
- 
-            # decrement the value of P
-            P = P-1
-        
-        self.__userid = lname+phone_num
-        print(self.__userid)
+    # Define the accessor to the phone_number field
+    def set_phone_number(self, new_phone_number):
+        self.__phone_number = new_phone_number
 
     # Define the mutator to the username field
     def set_username(self, new_username):
@@ -74,15 +82,3 @@ class User:
     # Define the mutator to the password field
     def set_password(self, new_password):
         self.__password = new_password
-        
-     # Define the accessor to the fname field
-    def set_fname(self, new_fname):
-        self.__fname = new_fname
-
-    # Define the accessor to the lname field
-    def set_lname(self, new_lname):
-        self.__lname = new_lname
-    
-    # Define the accessor to the lname field
-    def set_phone_number(self, new_phone_number):
-        self.__phone_number = new_phone_number

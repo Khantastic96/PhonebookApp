@@ -6,40 +6,24 @@ Created on Tue Jul  9 16:05:44 2024
 """
 
 # Import modules
-from http import client
 from Entities.User import User
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 
-URI = "mongodb+srv://Omer123:abcefgh@phonebookappcluster.2tgxc.mongodb.net/?retryWrites=true&w=majority&appName=PhonebookAppCluster"
+# URI = "mongodb+srv://Omer123:abcefgh@phonebookappcluster.2tgxc.mongodb.net/?retryWrites=true&w=majority&appName=PhonebookAppCluster"
+URI = "mongodb+srv://Sharek123:pointd3xt3r@phonebookappcluster.2tgxc.mongodb.net/?retryWrites=true&w=majority&appName=PhonebookAppCluster"
 
-
-class UserDAO:
-    # Create a new client and connect to the server
-    client = MongoClient(URI, server_api=ServerApi('1'))
-        
-    # Send a ping to confirm a successful connection
-    try:
-        # Get databases
-        database = client.get_database("PhonebookAppDB")
-            
-        # Get collections
-        collection = database.get_collection("Users")
-        
-    except Exception as e:
-       print(e)
-       
+class UserDAO:    
     # Define the init method/class constructor
     def __init__(self):
         self.__user = User()
 
-
     # Define the method to insert a new user entry to the database
     def insert_user(self, user):
-         # Create a new client and connect to the server
+        # Create a new client and connect to the server
         client = MongoClient(URI, server_api=ServerApi('1'))
         
-        # Send a ping to confirm a successful connection
+        # Establish a successful connection
         try:
             # Get databases
             database = client.get_database("PhonebookAppDB")
@@ -49,15 +33,12 @@ class UserDAO:
             
             # Insertion logic
             result = collection.insert_one(
-            { "_id": user.get_userid,
-              "username" : user.get_username,
-              "password" : user.get_password
+            { "_id": user.get_user_id(),
+              "username" : user.get_username(),
+              "password" : user.get_password()
             })
-            print(result.acknowledged)
-        
         except Exception as e:
             print(e)
-
         finally:
             # Close the client
             client.close()
@@ -65,9 +46,61 @@ class UserDAO:
     
     # Define the method to find an existing user entry in the database
     def find_user(self, username):
+        # Create a new client and connect to the server
+        client = MongoClient(URI, server_api=ServerApi('1'))
         
+        # Establish a successful connection
+        try:
+            # Get databases
+            database = client.get_database("PhonebookAppDB")
+            
+            # Get collections
+            collection = database.get_collection("Users")
+
+            # Define query
+            query_filter = { "username":  username}
+            
+            # Search logic
+            result = collection.find_one(query_filter)
+        except Exception as e:
+            print(e)
+        finally:
+            # Close the client
+            client.close()
+        return 1
+    
+    # Define the method to authenticate an existing user entry in the database
+    def authenticate_user(self, username, password):
+        # Create a authenication flag
+        isAuthenticate = False
+        # Create a new client and connect to the server
+        client = MongoClient(URI, server_api=ServerApi('1'))
         
-         # Create a new client and connect to the server
+        # Establish a successful connection
+        try:
+            # Get databases
+            database = client.get_database("PhonebookAppDB")
+            
+            # Get collections
+            collection = database.get_collection("Users")
+
+            # Define query
+            query_filter = { "username":  username}
+            
+            # Authentication logic
+            result = collection.find_one(query_filter)
+            if result["username"] == username and result["password"] == password:
+                isAuthenticate = True
+        except Exception as e:
+            print(e)
+        finally:
+            # Close the client
+            client.close()
+        return isAuthenticate
+    
+    # Define the method to update an existing user entry in the database
+    def update_user(self, username, password):
+        # Create a new client and connect to the server
         client = MongoClient(URI, server_api=ServerApi('1'))
         
         # Send a ping to confirm a successful connection
@@ -77,66 +110,36 @@ class UserDAO:
             
             # Get collections
             collection = database.get_collection("Users")
-
-            # Querying logic
-            query_filter = { "username":  username}
-            result = collection.find_one(query_filter)
-            print(result)
-
-        except Exception as e:
-            print(e)
-
-        finally:
-            # Close the client
-            client.close()
-        return 1
-    
-    # Define the method to update an existing user entry in the database
-    def update_user(self, user):
-        # Updating logic
-        
-          # Create a new client and connect to the server
-        client = MongoClient(URI, server_api=ServerApi('1'))
-        
-        # Send a ping to confirm a successful connection
-        try:
-            # Get databases
-            database = client.get_database("PhonebookAppDB")
             
-            collection = database.get_collection("Users")
-
-            query_filter = { "username": user.get_username }
-            update_operation = { "$set": { "username": user.set_username }, 
-                                 "$set": { "password": user.set_password } }
+            # Define query
+            query_filter = { "username": username }
+            update_operation = { "$set": { "username": username }, 
+                                 "$set": { "password": password } }
             
+            # Modification logic
             result = collection.update_one(query_filter, update_operation)
-            
-            print(result.modified_count)
-        
         except Exception as e:
             print(e)
-        
         return 1
     
     # Define the method to delete an existing user entry from the database
     def delete_user(self, user):
-        # Deleting logic
-        
         # Create a new client and connect to the server
         client = MongoClient(URI, server_api=ServerApi('1'))
         
-        # Send a ping to confirm a successful connection
+        # Establish a successful connection
         try:
             # Get databases
             database = client.get_database("PhonebookAppDB")
             
+            # Get collections
             collection = database.get_collection("Users")
 
+            # Define query
             query_filter = { "username": user.get_username }
+            
+            # Deletion logic
             result = collection.delete_one(query_filter)
-            print(result.deleted_count)
-        
         except Exception as e:
             print(e)
-        
         return 1
