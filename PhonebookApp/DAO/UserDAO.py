@@ -32,11 +32,10 @@ class UserDAO:
             collection = database.get_collection("Users")
             
             # Insertion logic
-            result = collection.insert_one(
-            { "_id": user.get_user_id(),
+            result = collection.insert_one({
+              "_id": user.get_user_id(),
               "username" : user.get_username(),
-              "password" : user.get_password()
-            })
+              "password" : user.get_password() })
         except Exception as e:
             print(e)
         finally:
@@ -46,6 +45,8 @@ class UserDAO:
     
     # Define the method to find an existing user entry in the database
     def find_user(self, username):
+        # Create a return object of the query
+        result = {}
         # Create a new client and connect to the server
         client = MongoClient(URI, server_api=ServerApi('1'))
         
@@ -58,7 +59,7 @@ class UserDAO:
             collection = database.get_collection("Users")
 
             # Define query
-            query_filter = { "username":  username}
+            query_filter = { "username":  username }
             
             # Search logic
             result = collection.find_one(query_filter)
@@ -67,12 +68,12 @@ class UserDAO:
         finally:
             # Close the client
             client.close()
-        return 1
+        return result
     
     # Define the method to authenticate an existing user entry in the database
     def authenticate_user(self, username, password):
         # Create a authenication flag
-        isAuthenticate = False
+        is_authenticated = False
         # Create a new client and connect to the server
         client = MongoClient(URI, server_api=ServerApi('1'))
         
@@ -90,13 +91,13 @@ class UserDAO:
             # Authentication logic
             result = collection.find_one(query_filter)
             if result["username"] == username and result["password"] == password:
-                isAuthenticate = True
+                is_authenticated = True
         except Exception as e:
             print(e)
         finally:
             # Close the client
             client.close()
-        return isAuthenticate
+        return is_authenticated
     
     # Define the method to update an existing user entry in the database
     def update_user(self, username, password):

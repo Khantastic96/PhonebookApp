@@ -7,6 +7,11 @@ Created on Fri Aug 23 02:05:37 2024
 
 # Import modules
 from Entities.Record import Record
+from pymongo.mongo_client import MongoClient
+from pymongo.server_api import ServerApi
+
+# URI = "mongodb+srv://Omer123:abcefgh@phonebookappcluster.2tgxc.mongodb.net/?retryWrites=true&w=majority&appName=PhonebookAppCluster"
+URI = "mongodb+srv://Sharek123:pointd3xt3r@phonebookappcluster.2tgxc.mongodb.net/?retryWrites=true&w=majority&appName=PhonebookAppCluster"
 
 class RecordDAO:
     # Define the init method/class constructor
@@ -15,7 +20,7 @@ class RecordDAO:
         
     # Define the method to insert a new record entry to the database
     def insert_record(self, record):
-        # Insertion logic
+        # Create a new client and connect to the server
         client = MongoClient(URI, server_api=ServerApi('1'))
 
         # Send a ping to confirm a successful connection
@@ -37,18 +42,18 @@ class RecordDAO:
                  "postal_code": record.get_postal_code,
                  "date_of_birth": record.get_date_of_birth})
             print(result.acknowledged)
-
         except Exception as e:
             print(e)
-
         finally:
             # Close the client
             client.close()
         return 1
     
     # Define the method to find an existing record entry in the database
-    def find_record(self, name):
-        # Querying logic
+    def find_records(self, phonebook_id):
+        # Create a return object of the query
+        results = []
+        # Create a new client and connect to the server
         client = MongoClient(URI, server_api=ServerApi('1'))
 
         # Establish a successful connection
@@ -60,23 +65,52 @@ class RecordDAO:
             collection = database.get_collection("Records")
 
             # Define query
-            query_filter = {"name": name}
+            query_filter = { "phonebook_id": phonebook_id }
 
             # Search logic
-            result = collection.find_one(query_filter)
+            results = list(collection.find(query_filter))
         except Exception as e:
             print(e)
         finally:
             # Close the client
             client.close()
-        return 1
+        return results
     
+    # Define the method to determine if a phonebook's record(s) exists in the database
+    def has_records(self, phonebook_id):
+        # Create a verification flag
+        has_records = False
+        # Create a new client and connect to the server
+        client = MongoClient(URI, server_api=ServerApi('1'))
+        
+        # Establish a successful connection
+        try:
+            # Get databases
+            database = client.get_database("PhonebookAppDB")
+            
+            # Get collections
+            collection = database.get_collection("Records")
+            
+            # Define query
+            query_filter = { "phonebook_id": phonebook_id }
+            
+            # Verification logic
+            result = collection.find_one(query_filter)
+            if result:
+                has_records = True
+        except Exception as e:
+            print(e)
+        finally:
+            # Close the client
+            client.close()
+        return has_records        
+        
     # Define the method to update an existing record entry in the database
     def update_record(self, record):
-        # Updating logic
+        # Create a new client and connect to the server
         client = MongoClient(URI, server_api=ServerApi('1'))
 
-        # Send a ping to confirm a successful connection
+        # Establish a successful connection
         try:
             # Get databases
             database = client.get_database("PhonebookAppDB")
@@ -99,27 +133,33 @@ class RecordDAO:
             result = collection.update_one(query_filter, update_operation)
         except Exception as e:
             print(e)
+        finally:
+            # Close the client
+            client.close()
         return 1
     
     # Define the method to delete an existing record entry from the database
     def delete_record(self, record):
-        # Deleting logic
-
         # Create a new client and connect to the server
         client = MongoClient(URI, server_api=ServerApi('1'))
 
-        # Send a ping to confirm a successful connection
+        # Establish a successful connection
         try:
             # Get databases
             database = client.get_database("PhonebookAppDB")
-
+            
+            # Get collections
             collection = database.get_collection("Records")
 
+            # Define query
             query_filter = { "name": record.get_name }
+            
+            # Deletion logic
             result = collection.delete_one(query_filter)
             print(result.deleted_count)
-
         except Exception as e:
             print(e)
-
+        finally:
+            # Close the client
+            client.close()
         return 1

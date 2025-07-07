@@ -12,8 +12,13 @@ from .Record import Record
 class Phonebook:
     # Define the init method/class constructor
     def __init__(self):
+        self.__phonebook_id = ""
         self.__user = User()
         self.__records = []
+    
+    # Define the accessor for the phonebook_id field
+    def get_phonebook_id(self):
+        return self.__phonebook_id
     
     # Define the accessor for the user field
     def get_user(self):
@@ -22,6 +27,14 @@ class Phonebook:
     # Define the accessor for the records field
     def get_records(self):
         return self.__records
+    
+    # Define the generator for the phonebook_id field
+    def generate_phonebook_id(self):
+        self.__phonebook_id = self.user.get_user_id() + "_" + "PB1"
+        
+    # Defube the mutator for the phonebook_id field
+    def set_phonebook_id(self, new_phonebook_id):
+        self.__phonebook_id = new_phonebook_id
     
     # Define the mutator for the user field
     def set_user(self, new_user):

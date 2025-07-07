@@ -61,17 +61,20 @@ class User:
             self.__user_id = self.__user_id + p_number[len(p_number) - n]
             # Increment the value of n
             n = n - 1
-        print(self.__user_id)
         
-    # Define the accessor to the first_name field
+    # Define the mutator to the user_id field
+    def set_user_id(self, new_user_id):
+        self.__user_id = new_user_id
+    
+    # Define the mutator to the first_name field
     def set_first_name(self, new_first_name):
         self.__first_name = new_first_name
 
-    # Define the accessor to the last_name field
+    # Define the mutator to the last_name field
     def set_last_name(self, new_last_name):
         self.__last_name = new_last_name
     
-    # Define the accessor to the phone_number field
+    # Define the mutator to the phone_number field
     def set_phone_number(self, new_phone_number):
         self.__phone_number = new_phone_number
 

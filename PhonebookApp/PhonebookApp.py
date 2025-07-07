@@ -58,8 +58,52 @@ def main():
                 print("ERROR: Login credentials invalid!")
                 input("Press ENTER to continue...")
             else:
-                # Run Phonebook application
+                # Cache user session
+                user = User()
+                # cached_user = userDAO.find_user(username)
+                user.set_user_id(userDAO.find_user(username)["_id"])
+                user.set_username(userDAO.find_user(username)["username"])
+                user.set_password(userDAO.find_user(username)["password"])
+                
+                # Request for existing phonebook with MongoDB cluster
+                phonebookDAO = PhonebookDAO()
+                has_phonebook = phonebookDAO.has_phonebook(user.get_user_id())
+                
+                # Check for existing phonebook
+                if has_phonebook != True:
+                    phonebook = Phonebook()
+                    phonebook.set_user(user)
+                    phonebook.generate_phonebook_id()
+                    phonebookDAO.insert_phonebook(user, phonebook)
+                
+                # Cache phonebook
                 phonebook = Phonebook()
+                # cached_phonebook = phonebookDAO.find_phonebook(user.get_user_id())
+                phonebook.set_phonebook_id(phonebookDAO.find_phonebook(user.get_user_id())["_id"])
+                phonebook.set_user(user)
+                
+                # Request for exisiting record(s) with MongoDB cluster
+                recordDAO = RecordDAO()
+                has_records = recordDAO.has_records(phonebook.get_phonebook_id())
+                
+                # Check for existing records
+                if has_records != False:
+                    # Cache records
+                    record = Record()
+                    collection = recordDAO.find_records(phonebook.get_phonebook_id())
+                    for document in collection:
+                        record.set_record_id(document["_id"])
+                        record.set_name(document["name"])
+                        record.set_phone_number(document["phone_number"])
+                        record.set_email(document["email"])
+                        record.set_address(document["address"])
+                        record.set_city(document["city"])
+                        record.set_province(document["province"])
+                        record.set_postal_code(document["postal_code"])
+                        record.set_date_of_birth(document["date_of_birth"])
+                        phonebook.add_record(record)
+                
+                # Run Phonebook application
                 while post_input_choice != EXIT:
                     # Application logic
                     post_main_menu()

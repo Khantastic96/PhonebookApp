@@ -16,6 +16,7 @@ DAYS_IN_YEAR = 365.25
 class Record:
     # Define the init method/class constructor
     def __init__(self):
+        self.__record_id = ""
         self.__name = ""
         self.__phone_number = ""
         self.__email = ""
@@ -25,7 +26,11 @@ class Record:
         self.__postal_code = ""
         self.__date_of_birth = ""
         self.__age = 0.0
-        
+    
+    # Define the accessor to the record_id field
+    def get_record_id(self):
+        return self.__record_id
+    
     # Define the accessor to the name field
     def get_name(self):
         return self.__name
@@ -62,6 +67,14 @@ class Record:
     def get_age(self):
         return self.__age
     
+    # Define the generator for the record_id field
+    def generate_record_id(self, user_id, phonebook_id):
+        self.__record_id = user_id + "_" + phonebook_id + "_" + "R1"
+        
+    # Define the mutator to the record_id field
+    def set_record_id(self, new_record_id):
+        self.__record_id = new_record_id
+        
     # Define the mutator to the name field
     def set_name(self, new_name):
         self.__name = new_name
