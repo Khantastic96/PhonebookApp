@@ -85,14 +85,15 @@ def main():
                 # Request for exisiting record(s) with MongoDB cluster
                 recordDAO = RecordDAO()
                 has_records = recordDAO.has_records(phonebook.get_phonebook_id())
-                
+
                 # Check for existing records
-                if has_records != False:
+                if has_records:
                     # Cache records
                     record = Record()
                     collection = recordDAO.find_records(phonebook.get_phonebook_id())
                     for document in collection:
                         record.set_record_id(document["_id"])
+                        record.set_phonebook_id(document["phonebook_id"])
                         record.set_name(document["name"])
                         record.set_phone_number(document["phone_number"])
                         record.set_email(document["email"])
@@ -123,6 +124,8 @@ def main():
                         date_of_birth = input("Enter D.O.B (dd/mm/yyy): ")
                         
                         record = Record()
+                        record.generate_record_id(phonebook.get_phonebook_id(), len(phonebook.get_records()) + 1)
+                        record.set_phonebook_id(phonebook.get_phonebook_id())
                         record.set_name(name)                    
                         record.set_phone_number(phone_number)
                         record.set_email(email)
@@ -131,7 +134,8 @@ def main():
                         record.set_province(province)
                         record.set_postal_code(postal_code)
                         record.set_date_of_birth(date_of_birth)
-                        
+
+                        recordDAO.insert_record(record)
                         phonebook.add_record(record)
                         print("")
                         print("...Record added!")

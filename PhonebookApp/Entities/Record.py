@@ -17,6 +17,7 @@ class Record:
     # Define the init method/class constructor
     def __init__(self):
         self.__record_id = ""
+        self.__phonebook_id = ""
         self.__name = ""
         self.__phone_number = ""
         self.__email = ""
@@ -26,11 +27,15 @@ class Record:
         self.__postal_code = ""
         self.__date_of_birth = ""
         self.__age = 0.0
-    
+
     # Define the accessor to the record_id field
     def get_record_id(self):
         return self.__record_id
-    
+
+    # Define the accessor to the phonebook_id field
+    def get_phonebook_id(self):
+        return self.__phonebook_id
+
     # Define the accessor to the name field
     def get_name(self):
         return self.__name
@@ -68,13 +73,17 @@ class Record:
         return self.__age
     
     # Define the generator for the record_id field
-    def generate_record_id(self, user_id, phonebook_id):
-        self.__record_id = user_id + "_" + phonebook_id + "_" + "R1"
-        
+    def generate_record_id(self, phonebook_id, record_no):
+        self.__record_id = phonebook_id + "_" + "R" + str(record_no)
+
     # Define the mutator to the record_id field
     def set_record_id(self, new_record_id):
         self.__record_id = new_record_id
-        
+
+    # Define the mutator to the phonebook_id field
+    def set_phonebook_id(self, new_phonebook_id):
+        self.__phonebook_id = new_phonebook_id
+
     # Define the mutator to the name field
     def set_name(self, new_name):
         self.__name = new_name
@@ -106,7 +115,7 @@ class Record:
     # Define the mutator to the date_of_birth
     def set_date_of_birth(self, new_date_of_birth):
         self.__date_of_birth = new_date_of_birth
-        self.__age = self.calculate_age()
+        self.__age = math.floor(self.calculate_age())
         
     # Define the method to calculate the age
     def calculate_age(self):

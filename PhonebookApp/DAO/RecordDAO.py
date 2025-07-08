@@ -33,14 +33,17 @@ class RecordDAO:
 
             # Insertion logic
             result = collection.insert_one(
-                {"name": record.get_name,
-                 "phone_number": record.get_phone_number,
-                 "email": record.get_email,
-                 "address": record.get_address,
-                 "city": record.get_city,
-                 "province": record.get_province,
-                 "postal_code": record.get_postal_code,
-                 "date_of_birth": record.get_date_of_birth})
+                {"_id": record.get_record_id(),
+                 "phonebook_id": record.get_phonebook_id(),
+                 "name": record.get_name(),
+                 "phone_number": record.get_phone_number(),
+                 "email": record.get_email(),
+                 "address": record.get_address(),
+                 "city": record.get_city(),
+                 "province": record.get_province(),
+                 "postal_code": record.get_postal_code(),
+                 "date_of_birth": record.get_date_of_birth(),
+                 "age": record.get_age()})
             print(result.acknowledged)
         except Exception as e:
             print(e)
