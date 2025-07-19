@@ -90,8 +90,9 @@ class UserDAO:
             
             # Authentication logic
             result = collection.find_one(query_filter)
-            if result["username"] == username and result["password"] == password:
-                is_authenticated = True
+            if result != None:
+                if result["username"] == username and result["password"] == password:
+                    is_authenticated = True
         except Exception as e:
             print(e)
         finally:

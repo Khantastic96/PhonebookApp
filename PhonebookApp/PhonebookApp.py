@@ -50,7 +50,6 @@ def main():
             # Authenticate with MongoDB cluster
             userDAO = UserDAO()
             is_authenticated = userDAO.authenticate_user(username, password)
-            post_input_choice = 0
             
             # Check login credentials
             if is_authenticated != True:
@@ -60,7 +59,6 @@ def main():
             else:
                 # Cache user session
                 user = User()
-                # cached_user = userDAO.find_user(username)
                 user.set_user_id(userDAO.find_user(username)["_id"])
                 user.set_username(userDAO.find_user(username)["username"])
                 user.set_password(userDAO.find_user(username)["password"])
@@ -78,7 +76,6 @@ def main():
                 
                 # Cache phonebook
                 phonebook = Phonebook()
-                # cached_phonebook = phonebookDAO.find_phonebook(user.get_user_id())
                 phonebook.set_phonebook_id(phonebookDAO.find_phonebook(user.get_user_id())["_id"])
                 phonebook.set_user(user)
                 
@@ -89,9 +86,12 @@ def main():
                 # Check for existing records
                 if has_records:
                     # Cache records
-                    record = Record()
                     collection = recordDAO.find_records(phonebook.get_phonebook_id())
+                    
+                    # Iterates through each document in MongoDB collection
                     for document in collection:
+                        # Initialize a new record
+                        record = Record()
                         record.set_record_id(document["_id"])
                         record.set_phonebook_id(document["phonebook_id"])
                         record.set_name(document["name"])
@@ -102,7 +102,12 @@ def main():
                         record.set_province(document["province"])
                         record.set_postal_code(document["postal_code"])
                         record.set_date_of_birth(document["date_of_birth"])
+                        
+                        # Adds record to current phonebook registry
                         phonebook.add_record(record)
+                
+                # Reset post_input_choice
+                post_input_choice = 0
                 
                 # Run Phonebook application
                 while post_input_choice != EXIT:
@@ -113,7 +118,6 @@ def main():
                     if post_input_choice == ADD:
                         # Add record logic
                         add_menu()
-                        # Start code here
                         name = input("Enter NAME: ")
                         phone_number = input("Enter PHONE NUMBER: ")
                         email = input("Enter EMAIL: ")
@@ -121,8 +125,9 @@ def main():
                         city = input("Enter CITY: ")
                         province = input("Enter PROVINCE: ")
                         postal_code = input("Enter POSTAL CODE: ")
-                        date_of_birth = input("Enter D.O.B (dd/mm/yyy): ")
+                        date_of_birth = input("Enter D.O.B (dd/mm/yyyy): ")
                         
+                        # Initialize a new record
                         record = Record()
                         record.generate_record_id(phonebook.get_phonebook_id(), len(phonebook.get_records()) + 1)
                         record.set_phonebook_id(phonebook.get_phonebook_id())
@@ -134,36 +139,35 @@ def main():
                         record.set_province(province)
                         record.set_postal_code(postal_code)
                         record.set_date_of_birth(date_of_birth)
-
-                        recordDAO.insert_record(record)
+                        
+                        # Save locally on cached list
                         phonebook.add_record(record)
+                        # Save remotely on the MongoDB cluster
+                        recordDAO.insert_record(record)
                         print("")
                         print("...Record added!")
-                        # End code here
                         input("Press ENTER to continue...")
                     elif post_input_choice == LIST:
                         # List records logic
                         list_menu()
-                        # Start code here
                         phonebook.list_records()
-                        # End code here
                         print("")
                         input("Press ENTER to continue...")
                     elif post_input_choice == EXIT:
-                        # Exit logic
-                        # Start code here
-                        is_authenticated = False
-                        # End code here
+                        # Exit and clear session fields
                         print("")
                         print("...Saving your changes and logging out.")
+                        is_authenticated = False
+                        user = None
+                        phonebook = None
                         input("Press ENTER to continue...")
                     elif post_input_choice == MODIFY:
                         # Modify record logic
                         modify_menu()
-                        # Start code here
                         name = input("Enter NAME: ")
                         record = phonebook.search_records(name)
                         
+                        # Check if record exists
                         if record != None:
                             name = input("Enter NEW NAME: ")
                             phone_number = input("Enter NEW PHONE NUMBER: ")
@@ -174,6 +178,7 @@ def main():
                             postal_code = input("Enter NEW POSTAL CODE: ")
                             date_of_birth = input("Enter NEW D.O.B (dd/mm/yyyy): ")
                             
+                            # Reinitialize existing record
                             record.set_name(name)
                             record.set_phone_number(phone_number)
                             record.set_email(email)
@@ -183,41 +188,45 @@ def main():
                             record.set_postal_code(postal_code)
                             record.set_date_of_birth(date_of_birth)
                             
+                            # Update locally on cached list
                             phonebook.modify_record(record)
+                            # Update remotely on the MondoDB cluster
+                            recordDAO.update_record(record)
                             print("")
                             print("...Record modified!")
-                        else :
+                        else:
                             print("")
                             print("...Record not found!")
-                        # End code here
                         input("Press ENTER to continue...")
                     elif post_input_choice == SEARCH:
                         # Search records logic
                         search_menu()
-                        # Start code here
                         name = input("Enter NAME: ")
                         record = phonebook.search_records(name)
                         
+                        # Check if record exists
                         if record != None:
                             print(record)
                             print("")
                         else:
                             print("")
                             print("...Record not found!")
-                        # End code here
                         input("Press ENTER to continue...")
                     elif post_input_choice == DELETE:
                         # Delete record logic
                         delete_menu()
-                        # Start code here
                         name = input("Enter NAME: ")
                         record = phonebook.search_records(name)
                         
+                        # Check if record exists
                         if record != None:
                             # Confirm deletion
                             confirm = input("CONFIRM DELETION? (Y/N): ")
                             if confirm.upper() == "Y":
+                                # Delete locally on cached list
                                 phonebook.delete_record(record)
+                                # Delete remotely on the MondoDB cluster
+                                recordDAO.delete_record(record)
                                 print("")
                                 print("...Record deleted!")
                             else:
@@ -226,7 +235,6 @@ def main():
                         else:
                             print("")
                             print("...Record not found!")
-                        # End code here
                         input("Press ENTER to continue...")
                     else:
                         # Invalid entry
@@ -262,12 +270,9 @@ def main():
                 print("...User not registered!")
             input("Press ENTER to continue...")
         elif pre_input_choice == QUIT:
-            # Quit the application and save changes to MongoDB Cluster
-            # Start code here
-            
+            # Quit the application
             print("")
             print("...Quitting application!")
-            # End code here
         else:
             # Invalid entry
             print("")
