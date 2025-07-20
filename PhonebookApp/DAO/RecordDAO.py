@@ -44,7 +44,7 @@ class RecordDAO:
                  "postal_code": record.get_postal_code(),
                  "date_of_birth": record.get_date_of_birth(),
                  "age": record.get_age()})
-            print(result.acknowledged)
+
         except Exception as e:
             print(e)
         finally:
@@ -166,17 +166,35 @@ class RecordDAO:
 
             # Define query
             query_filter = {"_id": record.get_record_id() }
-            update_operation = {"$set": { "name": record.get_name() },
-                                "$set": { "phone_number": record.get_phone_number() },
-                                "$set": { "email": record.get_email() },
-                                "$set": { "address": record.get_address() },
-                                "$set": { "city": record.get_city() },
-                                "$set": { "province": record.get_province() },
-                                "$set": { "postal_code": record.get_postal_code() },
-                                "$set": { "date_of_birth": record.get_date_of_birth() }}
-
-            # Modification logic
-            result = collection.update_one(query_filter, update_operation)
+            
+            # Fetch queried record
+            queried_record = collection.find_one(query_filter)
+            fields_to_update = {}
+            
+            # Check for unchanged or null entries
+            if record.get_name() != queried_record.get("name") and record.get_name() != None:
+                fields_to_update["name"] = record.get_name()
+            if record.get_phone_number() != queried_record.get("phone_number") and record.get_phone_number() != None:
+                fields_to_update["phone_number"] = record.get_phone_number()
+            if record.get_email() != queried_record.get("email") and record.get_email() != None:
+                fields_to_update["email"] = record.get_email()
+            if record.get_address() != queried_record.get("address") and record.get_address() != None:
+                fields_to_update["address"] = record.get_address()
+            if record.get_city() != queried_record.get("city") and record.get_city() != None:
+                fields_to_update["city"] = record.get_city()
+            if record.get_province() != queried_record.get("province") and record.get_province() != None:
+                fields_to_update["province"] = record.get_province()
+            if record.get_postal_code() != queried_record.get("postal_code") and record.get_postal_code() != None:
+                fields_to_update["postal_code"] = record.get_postal_code()
+            if record.get_date_of_birth() != queried_record.get("date_of_birth") and record.get_date_of_birth() != None:
+                fields_to_update["date_of_birth"] = record.get_date_of_birth()
+            if record.get_age() != queried_record.get("age") and record.get_age() != None:
+                fields_to_update["age"] = record.get_age()
+            
+            # Modification logic (if necessary)
+            if fields_to_update:
+                update_operation = { "$set": fields_to_update }
+                result = collection.update_one(query_filter, update_operation)
         except Exception as e:
             print(e)
         finally:
@@ -202,7 +220,6 @@ class RecordDAO:
             
             # Deletion logic
             result = collection.delete_one(query_filter)
-            print(result.deleted_count)
         except Exception as e:
             print(e)
         finally:

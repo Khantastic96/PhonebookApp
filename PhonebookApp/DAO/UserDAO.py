@@ -101,7 +101,7 @@ class UserDAO:
         return is_authenticated
     
     # Define the method to update an existing user entry in the database
-    def update_user(self, username, password):
+    def update_user(self, user):
         # Create a new client and connect to the server
         client = MongoClient(URI, server_api=ServerApi('1'))
         
@@ -114,9 +114,13 @@ class UserDAO:
             collection = database.get_collection("Users")
             
             # Define query
-            query_filter = { "username": username }
-            update_operation = { "$set": { "username": username }, 
-                                 "$set": { "password": password } }
+            query_filter = { "_id": user.get_user_id() }
+            update_operation = {
+                "$set": {
+                    "username": user.get_username(), 
+                    "password": user.get_password()
+                    }
+                }
             
             # Modification logic
             result = collection.update_one(query_filter, update_operation)
@@ -138,7 +142,7 @@ class UserDAO:
             collection = database.get_collection("Users")
 
             # Define query
-            query_filter = { "username": user.get_username }
+            query_filter = { "_id": user.get_user_id() }
             
             # Deletion logic
             result = collection.delete_one(query_filter)
