@@ -146,7 +146,7 @@ class Record:
     def calculate_date_in_days(self, date, month, year):
         return date + (month-1)*(DAYS_IN_MONTH) + (year-1)*(DAYS_IN_YEAR)
     
-    # Define to method to stringify an object when called through console ouput
+    # Define the method to stringify an object when called through console output
     def __str__(self):
         record = (self.__name + ", " + str(math.floor(self.__age)) +
         "\n\t#: " + self.__phone_number +
