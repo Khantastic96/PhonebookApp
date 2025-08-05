@@ -242,15 +242,50 @@ def main():
                         print("ERROR: Invalid entry!")
                         print("Please enter a number from the options provided.")
                         input("Press ENTER to continue...")
+
         elif pre_input_choice == REGISTER:
             # Register new user
             register_menu()
-            first_name = input("Enter FIRST NAME: ")
-            last_name = input("Enter LAST NAME: ")
-            phone_number = input("Enter PHONE NUMBER: ")
-            username = input("Enter USERNAME: ")
-            password = input("Enter PASSWORD: ")
-            
+            # First Name
+            while True:
+                first_name = input("Enter FIRST NAME: ")
+                if first_name.strip() and all(c.isalpha() or c.isspace() for c in first_name):
+                    break
+                else:
+                    print("First Name must not contain numbers, symbols or spaces")
+
+            #Last Name
+            while True:
+                last_name = input("Enter LAST NAME: ")
+                if last_name.strip() and all(c.isalpha() or c.isspace() for c in last_name):
+                    break
+                else:
+                    print("Last Name must not contain numbers, symbols or spaces")
+
+            #Phone Number
+            while True:
+                phone_number = input("Enter PHONE NUMBER: ")
+                if phone_number and phone_number.isdigit():
+                    break
+                else:
+                    print("Phone number must contain only numbers. Please try again.")
+
+            #USERNAME
+            while True:
+                username = input("Enter USERNAME: ")
+                if username and username.isalnum():
+                    break
+                else:
+                    print("Username must contain only letters and numbers. Please try again.")
+
+            #Password
+            while True:
+                password = input("Enter PASSWORD: ")
+                if password and password.isalnum():
+                    break
+                else:
+                    print("Password must contain only letters and numbers. Please try again.")
+
             # Create a new user
             user = User()
             user.set_first_name(first_name)
