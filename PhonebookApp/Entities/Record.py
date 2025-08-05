@@ -8,8 +8,14 @@ Created on Tue Jul  9 14:02:19 2024
 # Import modules
 from datetime import date
 import math
+import re
 
 # Define constants
+NAME_REGEX = r"^[A-Za-z]+\s?[A-Za-z]?+$"
+EMAIL_REGEX = r"^[a-zA-Z0-9_.+_]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
+ADDRESS_REGEX = r"^[0-9]+[A-Za-z]?\s+[\w\s.-]+$"
+POSTAL_CODE_REGEX = r"^[A-Za_z][0-9][A-Za-Z][ -]?[0-9][A-Za-z][0-9]$"
+DATE_OF_BIRTH_REGEX = r"^[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9]$"
 DAYS_IN_MONTH = 30.4375
 DAYS_IN_YEAR = 365.25
 
@@ -78,44 +84,93 @@ class Record:
 
     # Define the mutator to the record_id field
     def set_record_id(self, new_record_id):
-        self.__record_id = new_record_id
+        if str.isascii(new_record_id):
+            self.__record_id = new_record_id
+        else:
+            raise TypeError("Expected ASCII characters, got alpha or numerics")
 
     # Define the mutator to the phonebook_id field
     def set_phonebook_id(self, new_phonebook_id):
-        self.__phonebook_id = new_phonebook_id
+        if str.isascii(new_phonebook_id):
+            self.__phonebook_id = new_phonebook_id
+        else:
+            raise TypeError("Expected ASCII characters, got alpha or numerics")
 
     # Define the mutator to the name field
     def set_name(self, new_name):
-        self.__name = new_name
+        if str.isalpha(new_name):
+            if re.match(NAME_REGEX, new_name):
+                self.__name = new_name
+            else:
+                raise ValueError("Expected at least a name, got invalid entry")
+        else:
+            raise TypeError("Expected alpha characters, got numerics and/or ASCII")
         
     # Define the mutator to the phone_number field
     def set_phone_number(self, new_phone_number):
-        self.__phone_number = new_phone_number
+        if str.isnumeric(new_phone_number):
+            if len(new_phone_number) == 10:
+                self.__phone_number = new_phone_number
+            else:
+                raise ValueError("Expected 10 digits for phone number, got more/less")
+        else:
+            raise TypeError("Expected numeric characters, got alpha and/or ASCII")
         
     # Define the mutator to the email field
     def set_email(self, new_email):
-        self.__email = new_email
+        if str.isascii(new_email):
+            if re.match(EMAIL_REGEX, new_email): 
+                self.__email = new_email
+            else:
+                raise ValueError("Expected valid email, got invalid entry")
+        else:
+            raise TypeError("Expected ASCII characters, got alpha or numerics")
         
     # Define the mutator to the address field
     def set_address(self, new_address):
-        self.__address = new_address
+        if str.isascii(new_address):
+            if re.match(ADDRESS_REGEX, new_address):
+                self.__address = new_address
+            else:
+                raise ValueError("Expected street number and name for address, got invalid entry")    
+        else:
+            raise TypeError("Expected ASCII characters, got alpha or numerics")
         
     # Define the mutator to the city field
     def set_city(self, new_city):
-        self.__city = new_city
+        if str.isalpha(new_city):
+            self.__city = new_city
+        else:
+            raise TypeError("Expected alpha characters, got numerics and/or ASCII")
         
     # Define the mutator to the province field
     def set_province(self, new_province):
-        self.__province = new_province
+        if str.isalpha(new_province):
+            if len(new_province) == 2:
+                self.__province = str.upper(new_province)
+        else:
+            raise TypeError("Expected alpha characters, got numerics and/or ASCII")
         
     # Define the mutator to the postal_code
     def set_postal_code(self, new_postal_code):
-        self.__postal_code = new_postal_code
+        if str.isascii(new_postal_code):
+            if re.match(POSTAL_CODE_REGEX, new_postal_code):
+                self.__postal_code = new_postal_code
+            else:
+                raise ValueError("Expected postal code, got invalid entry")
+        else:
+            raise TypeError("Expected ASCII characters, got alpha or numerics")
         
     # Define the mutator to the date_of_birth
     def set_date_of_birth(self, new_date_of_birth):
-        self.__date_of_birth = new_date_of_birth
-        self.__age = math.floor(self.calculate_age())
+        if str.isascii(new_date_of_birth):
+            if re.match(DATE_OF_BIRTH_REGEX, new_date_of_birth):     
+                self.__date_of_birth = new_date_of_birth
+                self.__age = math.floor(self.calculate_age())
+            else:
+                raise ValueError("Expected date in format dd/mm/yyyy, got invalid entry")
+        else:
+            raise TypeError("Expected ASCII characters, got alpha or numerics")
         
     # Define the method to calculate the age
     def calculate_age(self):

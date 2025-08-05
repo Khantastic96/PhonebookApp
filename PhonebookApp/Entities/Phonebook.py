@@ -32,12 +32,16 @@ class Phonebook:
     def generate_phonebook_id(self):
         self.__phonebook_id = self.__user.get_user_id() + "_" + "PB1"
         
-    # Defube the mutator for the phonebook_id field
+    # Define the mutator for the phonebook_id field
     def set_phonebook_id(self, new_phonebook_id):
-        self.__phonebook_id = new_phonebook_id
+        if str.isascii(new_phonebook_id):
+            self.__phonebook_id = new_phonebook_id
+        else:
+            raise TypeError("Expected ASCII characters, got alpha or numerics")
     
     # Define the mutator for the user field
     def set_user(self, new_user):
+        self.__user.set_user_id(new_user.get_user_id())
         self.__user.set_username(new_user.get_username())
         self.__user.set_password(new_user.get_password())
     
