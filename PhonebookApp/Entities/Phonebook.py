@@ -30,7 +30,7 @@ class Phonebook:
     
     # Define the generator for the phonebook_id field
     def generate_phonebook_id(self):
-        self.__phonebook_id = self.__user.get_user_id() + "_" + "PB1"
+        self.__phonebook_id = self.__user.get_user_id() + "_" + "PB"
         
     # Define the mutator for the phonebook_id field
     def set_phonebook_id(self, new_phonebook_id):
