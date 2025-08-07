@@ -39,7 +39,14 @@ def main():
     # Intialize application
     while pre_input_choice != QUIT:
         pre_main_menu()
-        pre_input_choice = int(input("INPUT (1-3): "))
+        try:
+            pre_input_choice = int(input("INPUT (1-3): "))
+        except ValueError:
+            print("")
+            print("Expected an integer value, got non-integer entry")
+            input("Press ENTER to continue...")
+            continue
+        
         # Check input selection
         if pre_input_choice == LOGIN:
             # Login user
@@ -58,10 +65,13 @@ def main():
                 input("Press ENTER to continue...")
             else:
                 # Cache user session
-                user = User()
-                user.set_user_id(userDAO.find_user(username)["_id"])
-                user.set_username(userDAO.find_user(username)["username"])
-                user.set_password(userDAO.find_user(username)["password"])
+                try:
+                    user = User()
+                    user.set_user_id(userDAO.find_user(username)["_id"])
+                    user.set_username(userDAO.find_user(username)["username"])
+                    user.set_password(userDAO.find_user(username)["password"])
+                except ValueError as ve:
+                    print(ve)
                 
                 # Request for existing phonebook with MongoDB cluster
                 phonebookDAO = PhonebookDAO()
@@ -69,15 +79,21 @@ def main():
                 
                 # Check for existing phonebook
                 if has_phonebook != True:
-                    phonebook = Phonebook()
-                    phonebook.set_user(user)
-                    phonebook.generate_phonebook_id()
-                    phonebookDAO.insert_phonebook(user, phonebook)
+                    try:
+                        phonebook = Phonebook()
+                        phonebook.set_user(user)
+                        phonebook.generate_phonebook_id()
+                        phonebookDAO.insert_phonebook(user, phonebook)
+                    except ValueError as ve:
+                        print(ve)
                 
                 # Cache phonebook
-                phonebook = Phonebook()
-                phonebook.set_phonebook_id(phonebookDAO.find_phonebook(user.get_user_id())["_id"])
-                phonebook.set_user(user)
+                try:
+                    phonebook = Phonebook()
+                    phonebook.set_phonebook_id(phonebookDAO.find_phonebook(user.get_user_id())["_id"])
+                    phonebook.set_user(user)
+                except ValueError as ve:
+                    print(ve)
                 
                 # Request for exisiting record(s) with MongoDB cluster
                 recordDAO = RecordDAO()
@@ -91,17 +107,20 @@ def main():
                     # Iterates through each document in MongoDB collection
                     for document in collection:
                         # Initialize a new record
-                        record = Record()
-                        record.set_record_id(document["_id"])
-                        record.set_phonebook_id(document["phonebook_id"])
-                        record.set_name(document["name"])
-                        record.set_phone_number(document["phone_number"])
-                        record.set_email(document["email"])
-                        record.set_address(document["address"])
-                        record.set_city(document["city"])
-                        record.set_province(document["province"])
-                        record.set_postal_code(document["postal_code"])
-                        record.set_date_of_birth(document["date_of_birth"])
+                        try:
+                            record = Record()
+                            record.set_record_id(document["_id"])
+                            record.set_phonebook_id(document["phonebook_id"])
+                            record.set_name(document["name"])
+                            record.set_phone_number(document["phone_number"])
+                            record.set_email(document["email"])
+                            record.set_address(document["address"])
+                            record.set_city(document["city"])
+                            record.set_province(document["province"])
+                            record.set_postal_code(document["postal_code"])
+                            record.set_date_of_birth(document["date_of_birth"])
+                        except ValueError as ve:
+                            print(ve)
                         
                         # Adds record to current phonebook registry
                         phonebook.add_record(record)
@@ -113,32 +132,29 @@ def main():
                 while post_input_choice != EXIT:
                     # Application logic
                     post_main_menu()
-                    post_input_choice = int(input("INPUT (1-6): "))
+                    try:
+                        post_input_choice = int(input("INPUT (1-6): "))
+                    except ValueError:
+                        print("")
+                        print("Expected an integer value, got non-integer entry")
+                        input("Press ENTER to continue...")
+                        continue
+                    
                     # Check input selection
                     if post_input_choice == ADD:
-                        # Add record logic
+                        # Add record logic and initialize a new record
                         add_menu()
-                        name = input("Enter NAME: ")
-                        phone_number = input("Enter PHONE NUMBER: ")
-                        email = input("Enter EMAIL: ")
-                        address = input("Enter ADDRESS: ")
-                        city = input("Enter CITY: ")
-                        province = input("Enter PROVINCE: ")
-                        postal_code = input("Enter POSTAL CODE: ")
-                        date_of_birth = input("Enter D.O.B (dd/mm/yyyy): ")
-                        
-                        # Initialize a new record
                         record = Record()
                         record.generate_record_id(phonebook.get_phonebook_id(), len(phonebook.get_records()) + 1)
                         record.set_phonebook_id(phonebook.get_phonebook_id())
-                        record.set_name(name)                    
-                        record.set_phone_number(phone_number)
-                        record.set_email(email)
-                        record.set_address(address)
-                        record.set_city(city)
-                        record.set_province(province)
-                        record.set_postal_code(postal_code)
-                        record.set_date_of_birth(date_of_birth)
+                        validate_input("Enter NAME: ", record.set_name)
+                        validate_input("Enter PHONE NUMBER: ", record.set_phone_number)
+                        validate_input("Enter EMAIL: ", record.set_email)
+                        validate_input("Enter ADDRESS: ", record.set_address)
+                        validate_input("Enter CITY: ", record.set_city)
+                        validate_input("Enter PROVINCE: ", record.set_province)
+                        validate_input("Enter POSTAL CODE: ", record.set_postal_code)
+                        validate_input("Enter D.O.B (dd/mm/yyyy): ", record.set_date_of_birth)
                         
                         # Save locally on cached list
                         phonebook.add_record(record)
@@ -169,25 +185,16 @@ def main():
                         
                         # Check if record exists
                         if record != None:
-                            name = input("Enter NEW NAME: ")
-                            phone_number = input("Enter NEW PHONE NUMBER: ")
-                            email = input("Enter NEW EMAIL: ")
-                            address = input("Enter NEW ADDRESS: ")
-                            city = input("Enter NEW CITY: ")
-                            province = input("Enter NEW PROVINCE: ")
-                            postal_code = input("Enter NEW POSTAL CODE: ")
-                            date_of_birth = input("Enter NEW D.O.B (dd/mm/yyyy): ")
-                            
                             # Reinitialize existing record
-                            record.set_name(name)
-                            record.set_phone_number(phone_number)
-                            record.set_email(email)
-                            record.set_address(address)
-                            record.set_city(city)
-                            record.set_province(province)
-                            record.set_postal_code(postal_code)
-                            record.set_date_of_birth(date_of_birth)
-                            
+                            validate_input("Enter NEW NAME: ", record.set_name)
+                            validate_input("Enter NEW PHONE NUMBER: ", record.set_phone_number)
+                            validate_input("Enter NEW EMAIL: ", record.set_email)
+                            validate_input("Enter NEW ADDRESS: ", record.set_address)
+                            validate_input("Enter NEW CITY: ", record.set_city)
+                            validate_input("Enter NEW PROVINCE: ", record.set_province)
+                            validate_input("Enter NEW POSTAL CODE: ", record.set_postal_code)
+                            validate_input("Enter NEW D.O.B (dd/mm/yyyy): ", record.set_date_of_birth)
+                                                        
                             # Update locally on cached list
                             phonebook.modify_record(record)
                             # Update remotely on the MondoDB cluster
@@ -229,7 +236,7 @@ def main():
                                 recordDAO.delete_record(record)
                                 print("")
                                 print("...Record deleted!")
-                            else:
+                            elif confirm.upper() == "N":
                                 print("")
                                 print("...Deletion aborted!")
                         else:
@@ -246,53 +253,12 @@ def main():
         elif pre_input_choice == REGISTER:
             # Register new user
             register_menu()
-            # First Name
-            while True:
-                first_name = input("Enter FIRST NAME: ")
-                if first_name.strip() and all(c.isalpha() or c.isspace() for c in first_name):
-                    break
-                else:
-                    print("First Name must not contain numbers, symbols or spaces")
-
-            #Last Name
-            while True:
-                last_name = input("Enter LAST NAME: ")
-                if last_name.strip() and all(c.isalpha() or c.isspace() for c in last_name):
-                    break
-                else:
-                    print("Last Name must not contain numbers, symbols or spaces")
-
-            #Phone Number
-            while True:
-                phone_number = input("Enter PHONE NUMBER: ")
-                if phone_number and phone_number.isdigit():
-                    break
-                else:
-                    print("Phone number must contain only numbers. Please try again.")
-
-            #USERNAME
-            while True:
-                username = input("Enter USERNAME: ")
-                if username and username.isalnum():
-                    break
-                else:
-                    print("Username must contain only letters and numbers. Please try again.")
-
-            #Password
-            while True:
-                password = input("Enter PASSWORD: ")
-                if password and password.isalnum():
-                    break
-                else:
-                    print("Password must contain only letters and numbers. Please try again.")
-
-            # Create a new user
             user = User()
-            user.set_first_name(first_name)
-            user.set_last_name(last_name)
-            user.set_phone_number(phone_number)
-            user.set_username(username)
-            user.set_password(password)
+            validate_input("Enter FIRST NAME: ", user.set_first_name)
+            validate_input("Enter LAST NAME: ", user.set_last_name)
+            validate_input("Enter PHONE NUMBER: ", user.set_phone_number)
+            validate_input("Enter USERNAME: ", user.set_username)
+            validate_input("Enter PASSWORD: ", user.set_password)
             user.generate_user_id()
             
             # Register with MongoDB cluster
@@ -315,6 +281,16 @@ def main():
             print("Please enter a number from the options provided.")
             input("Press ENTER to continue...")
                 
+# Define the input validation function
+def validate_input(prompt, setter_function):
+    while True:
+        try:
+            value = input(prompt)
+            setter_function(value)
+            return value
+        except ValueError as ve:
+            print(ve)
+    
 # Define the menu header function
 def menu_header():
     print(CLEAR_SCREEN, end="")

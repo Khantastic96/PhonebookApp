@@ -8,6 +8,10 @@ Created on Tue Jul  9 14:01:19 2024
 # Import modules
 from .User import User
 from .Record import Record
+import re
+
+# Define constants
+PHONEBOOK_ID_REGEX = r"^[A-Z]{3}[0-9]{4}_[A-Z]{2}$"
 
 class Phonebook:
     # Define the init method/class constructor
@@ -34,10 +38,10 @@ class Phonebook:
         
     # Define the mutator for the phonebook_id field
     def set_phonebook_id(self, new_phonebook_id):
-        if str.isascii(new_phonebook_id):
+        if re.match(PHONEBOOK_ID_REGEX, new_phonebook_id):
             self.__phonebook_id = new_phonebook_id
         else:
-            raise TypeError("Expected ASCII characters, got alpha or numerics")
+            raise ValueError("Expected format: ABC1234_PB, got invalid entry")
     
     # Define the mutator for the user field
     def set_user(self, new_user):
