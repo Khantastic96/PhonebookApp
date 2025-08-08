@@ -11,10 +11,10 @@ import re
 # Define constants
 USER_ID_REGEX = r"^[A-Z]{3}[0-9]{4}$"
 FIRST_NAME_REGEX = r"^[A-Za-z]+$"
-LAST_NAME_REGEX = r"^(?:\s[A-Za-z]+)*$"
+LAST_NAME_REGEX = r"^[A-Za-z -]*$"
 PHONE_NUMBER_REGEX = r"^[0-9]{10}$"
 USERNAME_REGEX = r"^[A-Za-z0-9._-]{6,20}$"
-PASSWORD_REGEX = r"^[A-Za-z0-9]{6,20}$"
+PASSWORD_REGEX = r"^[\x20-\x7E]{6,20}$"
 
 class User:
     # Define the init method/class constructor

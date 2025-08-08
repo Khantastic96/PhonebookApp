@@ -236,7 +236,7 @@ def main():
                                 recordDAO.delete_record(record)
                                 print("")
                                 print("...Record deleted!")
-                            elif confirm.upper() == "N":
+                            else:
                                 print("")
                                 print("...Deletion aborted!")
                         else:
@@ -282,12 +282,12 @@ def main():
             input("Press ENTER to continue...")
                 
 # Define the input validation function
-def validate_input(prompt, setter_function):
+def validate_input(str_prompt, mutator_method):
     while True:
         try:
-            value = input(prompt)
-            setter_function(value)
-            return value
+            input_value = input(str_prompt)
+            mutator_method(input_value)
+            return input_value
         except ValueError as ve:
             print(ve)
     
