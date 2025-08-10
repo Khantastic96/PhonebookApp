@@ -85,10 +85,17 @@ class Phonebook:
     # Define the method to search existing records in the phonebook
     def search_records(self, name):
         # Searching logic
+        records = []
         for record in self.__records:
-            if record.get_name() == name:
-                return record
-        return None
+            f_name, l_name = str.split(record.get_name(), " ")
+            partial_match = True
+            for i in range(0, len(name)):
+                if name[i] != f_name[i] and name[i] != l_name[i]:
+                    partial_match = False
+                    break
+            if partial_match:
+                records.append(record)
+        return records
     
     # Define the method to delete an existing record from the phonebook
     def delete_record(self, record):

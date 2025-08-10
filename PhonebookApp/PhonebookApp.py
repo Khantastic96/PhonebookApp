@@ -209,12 +209,13 @@ def main():
                         # Search records logic
                         search_menu()
                         name = input("Enter NAME: ")
-                        record = phonebook.search_records(name)
+                        records = phonebook.search_records(name)
                         
-                        # Check if record exists
-                        if record != None:
-                            print(record)
-                            print("")
+                        # Check if record(s) exists
+                        if records != None:
+                            for record in records:
+                                print(record)
+                                print("")
                         else:
                             print("")
                             print("...Record not found!")
