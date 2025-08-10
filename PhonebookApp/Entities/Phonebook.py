@@ -53,13 +53,19 @@ class Phonebook:
     def set_records(self, new_records):
         for record in new_records:
             self.__records.append(record)
-    
+
     # Define the method to add a new record to the phonebook
     def add_record(self, record):
         # Insertion logic
-        if record != None:
+        if record != None and self.__records == None:
             self.__records.append(record)
             return 1
+        if record != None:
+            phone_record = self.search_record_by_phone_number(record.get_phone_number())
+            email_record = self.search_record_by_email(record.get_email())
+            if phone_record != None and email_record != None:
+                self.__records.append(record)
+                return 1
         return 0
     
     # Define the method to list existing records in the phonebook
@@ -83,7 +89,7 @@ class Phonebook:
         return 1
     
     # Define the method to search existing records in the phonebook
-    def search_records(self, name):
+    def search_records_by_name(self, name):
         # Searching logic
         records = []
         for record in self.__records:
@@ -96,9 +102,23 @@ class Phonebook:
             if partial_match:
                 records.append(record)
         return records
-    
+
+    def search_record_by_phone_number(self, phone_number):
+        for record in self.__records:
+            if phone_number == record.get_phone_number():
+                return record
+        return None
+
+    def search_record_by_email(self, email):
+        for record in self.__records:
+            if email == record.get_email():
+                return record
+        return None
+
     # Define the method to delete an existing record from the phonebook
     def delete_record(self, record):
         # Deleting logic
         self.__records.remove(record)
         return 1
+
+

@@ -157,7 +157,7 @@ def main():
                         validate_input("Enter D.O.B (dd/mm/yyyy): ", record.set_date_of_birth)
                         
                         # Save locally on cached list
-                        phonebook.add_record(record)
+                        phonebook.add_record(record)1
                         # Save remotely on the MongoDB cluster
                         recordDAO.insert_record(record)
                         print("")
@@ -181,7 +181,7 @@ def main():
                         # Modify record logic
                         modify_menu()
                         name = input("Enter NAME: ")
-                        record = phonebook.search_records(name)
+                        record = phonebook.search_records_by_name(name)
                         
                         # Check if record exists
                         if record != None:
@@ -209,7 +209,7 @@ def main():
                         # Search records logic
                         search_menu()
                         name = input("Enter NAME: ")
-                        records = phonebook.search_records(name)
+                        records = phonebook.search_records_by_name(name)
                         
                         # Check if record(s) exists
                         if records != None:
@@ -224,7 +224,7 @@ def main():
                         # Delete record logic
                         delete_menu()
                         name = input("Enter NAME: ")
-                        record = phonebook.search_records(name)
+                        record = phonebook.search_records_by_name(name)
                         
                         # Check if record exists
                         if record != None:
