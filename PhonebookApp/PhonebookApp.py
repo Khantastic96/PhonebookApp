@@ -156,12 +156,17 @@ def main():
                         validate_input("Enter POSTAL CODE: ", record.set_postal_code)
                         validate_input("Enter D.O.B (dd/mm/yyyy): ", record.set_date_of_birth)
                         
-                        # Save locally on cached list
-                        phonebook.add_record(record)1
-                        # Save remotely on the MongoDB cluster
-                        recordDAO.insert_record(record)
-                        print("")
-                        print("...Record added!")
+                        # Check if new record is a duplicate of existing record
+                        if (phonebook.is_duplicate(record)):
+                            print("")
+                            print("...Duplicate entry not allowed!")
+                        else:
+                            # Save locally on cached list
+                            phonebook.add_record(record)
+                            # Save remotely on the MongoDB cluster
+                            recordDAO.insert_record(record)
+                            print("")
+                            print("...Record added!")
                         input("Press ENTER to continue...")
                     elif post_input_choice == LIST:
                         # List records logic

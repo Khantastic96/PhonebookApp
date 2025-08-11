@@ -57,15 +57,9 @@ class Phonebook:
     # Define the method to add a new record to the phonebook
     def add_record(self, record):
         # Insertion logic
-        if record != None and self.__records == None:
+        if record != None:
             self.__records.append(record)
             return 1
-        if record != None:
-            phone_record = self.search_record_by_phone_number(record.get_phone_number())
-            email_record = self.search_record_by_email(record.get_email())
-            if phone_record != None and email_record != None:
-                self.__records.append(record)
-                return 1
         return 0
     
     # Define the method to list existing records in the phonebook
@@ -104,12 +98,14 @@ class Phonebook:
         return records
 
     def search_record_by_phone_number(self, phone_number):
+        # Searching logic
         for record in self.__records:
             if phone_number == record.get_phone_number():
                 return record
         return None
 
     def search_record_by_email(self, email):
+        # Searching logic
         for record in self.__records:
             if email == record.get_email():
                 return record
@@ -120,5 +116,27 @@ class Phonebook:
         # Deleting logic
         self.__records.remove(record)
         return 1
-
-
+    
+    # Define the method to check for duplicate records with the same values
+    def is_duplicate(self, record):
+        if record != None:
+            for r in self.__records:
+                if record.get_name() != r.get_name():
+                    return False
+                if record.get_phone_number() != r.get_phone_number():
+                    return False
+                if record.get_email() != r.get_email():
+                    return False
+                if record.get_address() != r.get_address():
+                    return False
+                if record.get_city() != r.get_city():
+                    return False
+                if record.get_province() != r.get_province():
+                    return False
+                if record.get_postal_code() != r.get_postal_code():
+                    return False
+                if record.get_date_of_birth() != r.get_date_of_birth():
+                    return False
+        else:
+            return False
+        return True
