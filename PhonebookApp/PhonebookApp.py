@@ -186,29 +186,50 @@ def main():
                         # Modify record logic
                         modify_menu()
                         name = input("Enter NAME: ")
-                        record = phonebook.search_records_by_name(name)
+                        records = phonebook.search_records_by_name(name)
                         
-                        # Check if record exists
-                        if record != None:
-                            # Reinitialize existing record
-                            validate_input("Enter NEW NAME: ", record.set_name)
-                            validate_input("Enter NEW PHONE NUMBER: ", record.set_phone_number)
-                            validate_input("Enter NEW EMAIL: ", record.set_email)
-                            validate_input("Enter NEW ADDRESS: ", record.set_address)
-                            validate_input("Enter NEW CITY: ", record.set_city)
-                            validate_input("Enter NEW PROVINCE: ", record.set_province)
-                            validate_input("Enter NEW POSTAL CODE: ", record.set_postal_code)
-                            validate_input("Enter NEW D.O.B (dd/mm/yyyy): ", record.set_date_of_birth)
-                                                        
-                            # Update locally on cached list
-                            phonebook.modify_record(record)
-                            # Update remotely on the MondoDB cluster
-                            recordDAO.update_record(record)
-                            print("")
-                            print("...Record modified!")
+                        # Check if records exist
+                        if len(records) > 0:
+                            index = 0
+                            # Multiple records returned
+                            if len(records) > 1:
+                                # Determine which specific record to modify
+                                for i in range(0, len(records)):
+                                    print("%d. %s" % (i+1, records[i].get_name()))
+                                try:
+                                    print("")
+                                    index = int(input("Which record do you want to modify (1-%d): " % (len(records)))) - 1
+                                except ValueError:
+                                    print("")
+                                    print("Expected an integer value, got non-integer entry")
+                                    input("Press enter to continue...")
+                                    continue
+                            
+                            # Check input selection
+                            if index >= 0 and index < len(records):
+                                # Reinitialize existing record
+                                validate_input("Enter NEW NAME: ", records[index].set_name)
+                                validate_input("Enter NEW PHONE NUMBER: ", records[index].set_phone_number)
+                                validate_input("Enter NEW EMAIL: ", records[index].set_email)
+                                validate_input("Enter NEW ADDRESS: ", records[index].set_address)
+                                validate_input("Enter NEW CITY: ", records[index].set_city)
+                                validate_input("Enter NEW PROVINCE: ", records[index].set_province)
+                                validate_input("Enter NEW POSTAL CODE: ", records[index].set_postal_code)
+                                validate_input("Enter NEW D.O.B (dd/mm/yyyy): ", records[index].set_date_of_birth)
+                                                            
+                                # Update locally on cached list
+                                phonebook.modify_record(records[index])
+                                # Update remotely on the MondoDB cluster
+                                recordDAO.update_record(records[index])
+                                print("")
+                                print("...Record modified!")
+                            else:
+                                # Invalid entry
+                                print("")
+                                print("Expected an integer from the options provided, got invalid entry")
                         else:
                             print("")
-                            print("...Record not found!")
+                            print("...Record not found")
                         input("Press ENTER to continue...")
                     elif post_input_choice == SEARCH:
                         # Search records logic
@@ -217,7 +238,7 @@ def main():
                         records = phonebook.search_records_by_name(name)
                         
                         # Check if record(s) exists
-                        if records != None:
+                        if len(records) > 0:
                             for record in records:
                                 print(record)
                                 print("")
@@ -229,33 +250,52 @@ def main():
                         # Delete record logic
                         delete_menu()
                         name = input("Enter NAME: ")
-                        record = phonebook.search_records_by_name(name)
+                        records = phonebook.search_records_by_name(name)
                         
-                        # Check if record exists
-                        if record != None:
-                            # Confirm deletion
-                            confirm = input("CONFIRM DELETION? (Y/N): ")
-                            if confirm.upper() == "Y":
-                                # Delete locally on cached list
-                                phonebook.delete_record(record)
-                                # Delete remotely on the MondoDB cluster
-                                recordDAO.delete_record(record)
-                                print("")
-                                print("...Record deleted!")
+                        # Check if records exist
+                        if len(records) > 0:
+                            index = 0
+                            # Multiple records returned
+                            if len(records) > 1:
+                                # Determine which specific record to delete
+                                for i in range(0, len(records)):
+                                    print("%d. %s" % (i+1, records[i].get_name()))
+                                try:
+                                    print("")
+                                    index = int(input("Which record do you want to delete (1-%d): " % (len(records)))) - 1
+                                except ValueError:
+                                    print("")
+                                    print("Expected an integer value, got non-integer entry")
+                                    input("Press enter to continue...")
+                                    continue
+                            
+                            # Check input selection
+                            if index >= 0 and index < len(records):
+                                # Confirm deletion
+                                confirm = input("CONFIRM DELETION? (Y/N): ")
+                                if confirm.upper() == "Y":
+                                    # Delete locally on cached list
+                                    phonebook.delete_record(records[index])
+                                    # Delete remotely on the MondoDB cluster
+                                    recordDAO.delete_record(records[index])
+                                    print("")
+                                    print("...Record deleted!")
+                                else:
+                                    print("")
+                                    print("...Deletion aborted!")
                             else:
+                                # Invalid entry
                                 print("")
-                                print("...Deletion aborted!")
+                                print("Expected an integer from the options provided, got invalid entry")
                         else:
                             print("")
-                            print("...Record not found!")
+                            print("...Record not found")
                         input("Press ENTER to continue...")
                     else:
                         # Invalid entry
                         print("")
-                        print("ERROR: Invalid entry!")
-                        print("Please enter a number from the options provided.")
+                        print("Expected an integer from the options provided, got invalid entry")
                         input("Press ENTER to continue...")
-
         elif pre_input_choice == REGISTER:
             # Register new user
             register_menu()
@@ -283,8 +323,7 @@ def main():
         else:
             # Invalid entry
             print("")
-            print("ERROR: Invalid entry!")
-            print("Please enter a number from the options provided.")
+            print("Expected an integer from the options provided, got invalid entry")
             input("Press ENTER to continue...")
                 
 # Define the input validation function

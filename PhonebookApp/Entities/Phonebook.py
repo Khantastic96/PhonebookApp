@@ -86,15 +86,47 @@ class Phonebook:
     def search_records_by_name(self, name):
         # Searching logic
         records = []
-        for record in self.__records:
-            f_name, l_name = str.split(record.get_name(), " ")
-            partial_match = True
-            for i in range(0, len(name)):
-                if name[i] != f_name[i] and name[i] != l_name[i]:
+        # Check with partial name
+        if len(str.split(name, " ")) <= 1:
+            for record in self.__records:
+                f_name, l_name = str.split(record.get_name(), " ")
+                partial_match = True
+                # Check for all possible partial match conditions
+                if len(name) > len(f_name) and len(name) > len(l_name):
                     partial_match = False
-                    break
-            if partial_match:
-                records.append(record)
+                elif len(name) <= len(f_name) and len(name) > len(l_name):
+                    for i in range(0, len(name)):
+                        if name[i] != f_name[i]:
+                            partial_match = False
+                            break
+                elif len(name) > len(f_name) and len(name) <= len(l_name):
+                    for i in range(0, len(name)):
+                        if name[i] != l_name[i]:
+                            partial_match = False
+                            break
+                else:
+                    for i in range(0, len(name)):
+                        if name[i] != f_name[i] and name[i] != l_name[i]:
+                            partial_match = False
+                            break
+                if partial_match:
+                    records.append(record)
+        # Check with partial full name
+        else:
+            for record in self.__records:
+                r_f_name, r_l_name = str.split(record.get_name(), " ")
+                f_name, l_name = str.split(name, " ")
+                partial_match = True
+                # Check for all possible partial match conditions
+                if f_name == r_f_name and len(l_name) <= len(r_l_name):
+                    for i in range(0, len(l_name)):
+                        if l_name[i] != r_l_name[i]:
+                            partial_match = False
+                            break
+                else:
+                    partial_match = False
+                if partial_match:
+                    records.append(record)
         return records
 
     def search_record_by_phone_number(self, phone_number):
