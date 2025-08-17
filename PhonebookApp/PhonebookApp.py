@@ -6,7 +6,6 @@ Created on Sun Jun 30 20:49:44 2024
 """
 
 # Import modules
-from asyncio.windows_events import NULL
 from Entities.Phonebook import Phonebook
 from Entities.Record import Record
 from Entities.User import User
@@ -16,7 +15,6 @@ from DAO.UserDAO import UserDAO
 
 # Define global constants
 CLEAR_SCREEN = "\033[H\033[J"
-
 
 # Define the main function
 def main():
@@ -56,11 +54,11 @@ def main():
             password = input("PASSWORD: ")
 
             # Authenticate with MongoDB cluster
-            userDAO = UserDAO()
-            is_authenticated = userDAO.authenticate_user(username, password)
+            user_dao = UserDAO()
+            is_authenticated = user_dao.authenticate_user(username, password)
 
             # Check login credentials
-            if is_authenticated != True:
+            if not is_authenticated:
                 print("")
                 print("ERROR: Login credentials invalid!")
                 input("Press ENTER to continue...")
@@ -68,42 +66,42 @@ def main():
                 # Cache user session
                 try:
                     user = User()
-                    user.set_user_id(userDAO.find_user(username)["_id"])
-                    user.set_username(userDAO.find_user(username)["username"])
-                    user.set_password(userDAO.find_user(username)["password"])
+                    user.set_user_id(user_dao.find_user(username)["_id"])
+                    user.set_username(user_dao.find_user(username)["username"])
+                    user.set_password(user_dao.find_user(username)["password"])
                 except ValueError as ve:
                     print(ve)
 
                 # Request for existing phonebook with MongoDB cluster
-                phonebookDAO = PhonebookDAO()
-                has_phonebook = phonebookDAO.has_phonebook(user.get_user_id())
+                phonebook_dao = PhonebookDAO()
+                has_phonebook = phonebook_dao.has_phonebook(user.get_user_id())
 
                 # Check for existing phonebook
-                if has_phonebook != True:
+                if not has_phonebook:
                     try:
                         phonebook = Phonebook()
                         phonebook.set_user(user)
                         phonebook.generate_phonebook_id()
-                        phonebookDAO.insert_phonebook(user, phonebook)
+                        phonebook_dao.insert_phonebook(user, phonebook)
                     except ValueError as ve:
                         print(ve)
 
                 # Cache phonebook
                 try:
                     phonebook = Phonebook()
-                    phonebook.set_phonebook_id(phonebookDAO.find_phonebook(user.get_user_id())["_id"])
+                    phonebook.set_phonebook_id(phonebook_dao.find_phonebook(user.get_user_id())["_id"])
                     phonebook.set_user(user)
                 except ValueError as ve:
                     print(ve)
 
                 # Request for exisiting record(s) with MongoDB cluster
-                recordDAO = RecordDAO()
-                has_records = recordDAO.has_records(phonebook.get_phonebook_id())
+                record_dao = RecordDAO()
+                has_records = record_dao.has_records(phonebook.get_phonebook_id())
 
                 # Check for existing records
                 if has_records:
                     # Cache records
-                    collection = recordDAO.find_records(phonebook.get_phonebook_id())
+                    collection = record_dao.find_records(phonebook.get_phonebook_id())
 
                     # Iterates through each document in MongoDB collection
                     for document in collection:
@@ -165,7 +163,7 @@ def main():
                             # Save locally on cached list
                             phonebook.add_record(record)
                             # Save remotely on the MongoDB cluster
-                            recordDAO.insert_record(record)
+                            record_dao.insert_record(record)
                             print("")
                             print("...Record added!")
                         input("Press ENTER to continue...")
@@ -221,7 +219,7 @@ def main():
                                 # Update locally on cached list
                                 phonebook.modify_record(records[index])
                                 # Update remotely on the MondoDB cluster
-                                recordDAO.update_record(records[index])
+                                record_dao.update_record(records[index])
                                 print("")
                                 print("...Record modified!")
                             else:
@@ -278,7 +276,7 @@ def main():
                                     # Delete locally on cached list
                                     phonebook.delete_record(records[index])
                                     # Delete remotely on the MondoDB cluster
-                                    recordDAO.delete_record(records[index])
+                                    record_dao.delete_record(records[index])
                                     print("")
                                     print("...Record deleted!")
                                 else:
@@ -302,18 +300,19 @@ def main():
             register_menu()
             user = User()
             user_dao = UserDAO()
-
+            
+            # Get validated input for User fields
             validate_input("Enter FIRST NAME: ", user.set_first_name)
             validate_input("Enter LAST NAME: ", user.set_last_name)
             validate_input("Enter PHONE NUMBER: ", user.set_phone_number)
-
+            # Iterate until input is validated and meets conditions
             while True:
                 validate_input("Enter USERNAME: ", user.set_username)
                 if user_dao.find_user(user.get_username()) is not None:
                     print("...Username already exists!!")
                 else:
                     break
-
+            # Continue getting validated input for User fields
             validate_input("Enter PASSWORD: ", user.set_password)
             user.generate_user_id()
 
@@ -335,7 +334,6 @@ def main():
             print("Expected an integer from the options provided, got invalid entry")
             input("Press ENTER to continue...")
 
-
 # Define the input validation function
 def validate_input(str_prompt, mutator_method):
     while True:
@@ -346,18 +344,15 @@ def validate_input(str_prompt, mutator_method):
         except ValueError as ve:
             print(ve)
 
-
 # Define the menu header function
 def menu_header():
     print(CLEAR_SCREEN, end="")
     print("**********WELCOME TO PHONEBOOK**********")
 
-
 # Define the menu footer function
 def menu_footer():
     print("")
     print("****************************************")
-
 
 # Define the pre-authentication main menu function
 def pre_main_menu():
@@ -367,13 +362,11 @@ def pre_main_menu():
     print("    1.Login    2.Register    3.Quit")
     menu_footer()
 
-
 # Define the login menu function
 def login_menu():
     menu_header()
     print("                 LOGIN")
     menu_footer()
-
 
 # Define the register menu function
 def register_menu():
@@ -385,7 +378,6 @@ def register_menu():
     print("used for processing server data!")
     menu_footer()
 
-
 # Define the post-autentication main menu function
 def post_main_menu():
     menu_header()
@@ -395,13 +387,11 @@ def post_main_menu():
     print("    4.Modify      5.Search    6.Delete")
     menu_footer()
 
-
 # Define the add record menu function
 def add_menu():
     menu_header()
     print("                ADD NEW")
     menu_footer()
-
 
 # Define the list records menu function
 def list_menu():
@@ -409,13 +399,11 @@ def list_menu():
     print("                 LIST")
     menu_footer()
 
-
 # Define the modify record menu function
 def modify_menu():
     menu_header()
     print("                MODIFY")
     menu_footer()
-
 
 # Define the search records menu function
 def search_menu():
@@ -423,13 +411,11 @@ def search_menu():
     print("                SEARCH")
     menu_footer()
 
-
 # Define the delete record menu function
 def delete_menu():
     menu_header()
     print("                DELETE")
     menu_footer()
-
 
 # Invoke the main function
 main()

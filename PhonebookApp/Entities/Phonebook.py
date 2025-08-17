@@ -45,21 +45,32 @@ class Phonebook:
     
     # Define the mutator for the user field
     def set_user(self, new_user):
-        self.__user.set_user_id(new_user.get_user_id())
-        self.__user.set_username(new_user.get_username())
-        self.__user.set_password(new_user.get_password())
+        # Check for NoneType parameter
+        if new_user is not None:
+            self.__user.set_user_id(new_user.get_user_id())
+            self.__user.set_username(new_user.get_username())
+            self.__user.set_password(new_user.get_password())
+        else:
+            raise TypeError("Expected User object, got NoneType entry")
     
     # Define the mutator for the records field
     def set_records(self, new_records):
-        for record in new_records:
-            self.__records.append(record)
+        # Check for NoneType parameter
+        if new_records is not None:
+            for record in new_records:
+                self.__records.append(record)
+        else:
+            raise ValueError("Expected collection of Records, got NoneType entry")
 
     # Define the method to add a new record to the phonebook
     def add_record(self, record):
-        # Insertion logic
-        if record != None:
+        # Check for NoneType parameter
+        if record is not None:
+            # Insertion logic
             self.__records.append(record)
             return 1
+        else:
+            raise ValueError("Expected Record object, got NoneType entry")
         return 0
     
     # Define the method to list existing records in the phonebook
@@ -70,17 +81,22 @@ class Phonebook:
         
     # Define the method to modify existing records in the phonebook
     def modify_record(self, record):
-        # Modifying logic
-        index = self.__records.index(record)
-        self.__records[index].set_name(record.get_name())
-        self.__records[index].set_phone_number(record.get_phone_number())
-        self.__records[index].set_email(record.get_email())
-        self.__records[index].set_address(record.get_address())
-        self.__records[index].set_city(record.get_city())
-        self.__records[index].set_province(record.get_province())
-        self.__records[index].set_postal_code(record.get_postal_code())
-        self.__records[index].set_date_of_birth(record.get_date_of_birth())
-        return 1
+        # Check for NoneType parameter
+        if record is not None:
+            # Modifying logic
+            index = self.__records.index(record)
+            self.__records[index].set_name(record.get_name())
+            self.__records[index].set_phone_number(record.get_phone_number())
+            self.__records[index].set_email(record.get_email())
+            self.__records[index].set_address(record.get_address())
+            self.__records[index].set_city(record.get_city())
+            self.__records[index].set_province(record.get_province())
+            self.__records[index].set_postal_code(record.get_postal_code())
+            self.__records[index].set_date_of_birth(record.get_date_of_birth())
+            return 1
+        else:
+            raise ValueError("Expected Record object, got NoneType entry")
+        return 0
     
     # Define the method to search existing records in the phonebook
     def search_records_by_name(self, name):
@@ -130,28 +146,46 @@ class Phonebook:
         return records
 
     def search_record_by_phone_number(self, phone_number):
-        # Searching logic
-        for record in self.__records:
-            if phone_number == record.get_phone_number():
-                return record
+        # Check for NoneType parameter
+        if phone_number is not None:
+            # Searching logic
+            for record in self.__records:
+                if phone_number == record.get_phone_number():
+                    return record
+        else:
+            raise ValueError("Expected standard 10-digit phone number, got NoneType entry")
         return None
 
     def search_record_by_email(self, email):
-        # Searching logic
-        for record in self.__records:
-            if email == record.get_email():
-                return record
+        # Check for NoneType parameter
+        if email is not None:
+            # Searching logic
+            for record in self.__records:
+                if email == record.get_email():
+                    return record
+        else:
+            raise ValueError("Expected standard email, got NoneType entry")
         return None
 
     # Define the method to delete an existing record from the phonebook
     def delete_record(self, record):
-        # Deleting logic
-        self.__records.remove(record)
-        return 1
+        # Check for NoneType parameter
+        if record is not None:
+            # Deleting logic
+            self.__records.remove(record)
+            return 1
+        else:
+            raise ValueError("Expected Record object, got NoneType entry")
+        return 0
     
     # Define the method to check for duplicate records with the same values
     def is_duplicate(self, record):
-        if record != None:
+        # Check for empty phonebook
+        if len(self.__records) < 1:
+            return False
+        # Check for NoneType parameter
+        if record is not None:
+            # Check for duplicate entries (1:1)
             for r in self.__records:
                 if record.get_name() != r.get_name():
                     return False
@@ -170,5 +204,6 @@ class Phonebook:
                 if record.get_date_of_birth() != r.get_date_of_birth():
                     return False
         else:
+            raise ValueError("Expected Record object, got NoneType entry")
             return False
         return True

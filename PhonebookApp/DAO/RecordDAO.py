@@ -8,10 +8,8 @@ Created on Fri Aug 23 02:05:37 2024
 # Import modules
 from Entities.Record import Record
 from pymongo.mongo_client import MongoClient
+from .config import MONGO_URI
 from pymongo.server_api import ServerApi
-
-# URI = "mongodb+srv://Omer123:abcefgh@phonebookappcluster.2tgxc.mongodb.net/?retryWrites=true&w=majority&appName=PhonebookAppCluster"
-URI = "mongodb+srv://Sharek123:pointd3xt3r@phonebookappcluster.2tgxc.mongodb.net/?retryWrites=true&w=majority&appName=PhonebookAppCluster"
 
 class RecordDAO:
     # Define the init method/class constructor
@@ -21,7 +19,7 @@ class RecordDAO:
     # Define the method to insert a new record entry to the database
     def insert_record(self, record):
         # Create a new client and connect to the server
-        client = MongoClient(URI, server_api=ServerApi('1'))
+        client = MongoClient(MONGO_URI, server_api=ServerApi('1'))
 
         # Establish a successful connection
         try:
@@ -32,7 +30,7 @@ class RecordDAO:
             collection = database.get_collection("Records")
 
             # Insertion logic
-            result = collection.insert_one(
+            collection.insert_one(
                 {"_id": record.get_record_id(),
                  "phonebook_id": record.get_phonebook_id(),
                  "name": record.get_name(),
@@ -55,7 +53,7 @@ class RecordDAO:
     # Define the method to insert new record entries to the database
     def insert_records(self, records):
         # Create a new client and connect to the server
-        client = MongoClient(URI, server_api=ServerApi('1'))
+        client = MongoClient(MONGO_URI, server_api=ServerApi('1'))
         
         # Establish a sucessful connection
         try:
@@ -100,7 +98,7 @@ class RecordDAO:
         # Create a return object of the query
         results = []
         # Create a new client and connect to the server
-        client = MongoClient(URI, server_api=ServerApi('1'))
+        client = MongoClient(MONGO_URI, server_api=ServerApi('1'))
 
         # Establish a successful connection
         try:
@@ -127,7 +125,7 @@ class RecordDAO:
         # Create a verification flag
         has_records = False
         # Create a new client and connect to the server
-        client = MongoClient(URI, server_api=ServerApi('1'))
+        client = MongoClient(MONGO_URI, server_api=ServerApi('1'))
         
         # Establish a successful connection
         try:
@@ -154,7 +152,7 @@ class RecordDAO:
     # Define the method to update an existing record entry in the database
     def update_record(self, record):
         # Create a new client and connect to the server
-        client = MongoClient(URI, server_api=ServerApi('1'))
+        client = MongoClient(MONGO_URI, server_api=ServerApi('1'))
 
         # Establish a successful connection
         try:
@@ -172,29 +170,29 @@ class RecordDAO:
             fields_to_update = {}
             
             # Check for unchanged or null entries
-            if record.get_name() != queried_record.get("name") and record.get_name() != None:
+            if record.get_name() != queried_record.get("name") and record.get_name() is not None:
                 fields_to_update["name"] = record.get_name()
-            if record.get_phone_number() != queried_record.get("phone_number") and record.get_phone_number() != None:
+            if record.get_phone_number() != queried_record.get("phone_number") and record.get_phone_number() is not None:
                 fields_to_update["phone_number"] = record.get_phone_number()
-            if record.get_email() != queried_record.get("email") and record.get_email() != None:
+            if record.get_email() != queried_record.get("email") and record.get_email() is not None:
                 fields_to_update["email"] = record.get_email()
-            if record.get_address() != queried_record.get("address") and record.get_address() != None:
+            if record.get_address() != queried_record.get("address") and record.get_address() is not None:
                 fields_to_update["address"] = record.get_address()
-            if record.get_city() != queried_record.get("city") and record.get_city() != None:
+            if record.get_city() != queried_record.get("city") and record.get_city() is not None:
                 fields_to_update["city"] = record.get_city()
-            if record.get_province() != queried_record.get("province") and record.get_province() != None:
+            if record.get_province() != queried_record.get("province") and record.get_province() is not None:
                 fields_to_update["province"] = record.get_province()
-            if record.get_postal_code() != queried_record.get("postal_code") and record.get_postal_code() != None:
+            if record.get_postal_code() != queried_record.get("postal_code") and record.get_postal_code() is not None:
                 fields_to_update["postal_code"] = record.get_postal_code()
-            if record.get_date_of_birth() != queried_record.get("date_of_birth") and record.get_date_of_birth() != None:
+            if record.get_date_of_birth() != queried_record.get("date_of_birth") and record.get_date_of_birth() is not None:
                 fields_to_update["date_of_birth"] = record.get_date_of_birth()
-            if record.get_age() != queried_record.get("age") and record.get_age() != None:
+            if record.get_age() != queried_record.get("age") and record.get_age() is not None:
                 fields_to_update["age"] = record.get_age()
             
             # Modification logic (if necessary)
             if fields_to_update:
                 update_operation = { "$set": fields_to_update }
-                result = collection.update_one(query_filter, update_operation)
+                collection.update_one(query_filter, update_operation)
         except Exception as e:
             print(e)
         finally:
@@ -205,7 +203,7 @@ class RecordDAO:
     # Define the method to delete an existing record entry from the database
     def delete_record(self, record):
         # Create a new client and connect to the server
-        client = MongoClient(URI, server_api=ServerApi('1'))
+        client = MongoClient(MONGO_URI, server_api=ServerApi('1'))
 
         # Establish a successful connection
         try:
@@ -219,7 +217,7 @@ class RecordDAO:
             query_filter = { "_id": record.get_record_id() }
             
             # Deletion logic
-            result = collection.delete_one(query_filter)
+            collection.delete_one(query_filter)
         except Exception as e:
             print(e)
         finally:

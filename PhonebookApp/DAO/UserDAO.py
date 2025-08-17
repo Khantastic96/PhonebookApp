@@ -8,10 +8,8 @@ Created on Tue Jul  9 16:05:44 2024
 # Import modules
 from Entities.User import User
 from pymongo.mongo_client import MongoClient
+from .config import MONGO_URI
 from pymongo.server_api import ServerApi
-
-# URI = "mongodb+srv://Omer123:abcefgh@phonebookappcluster.2tgxc.mongodb.net/?retryWrites=true&w=majority&appName=PhonebookAppCluster"
-URI = "mongodb+srv://Sharek123:pointd3xt3r@phonebookappcluster.2tgxc.mongodb.net/?retryWrites=true&w=majority&appName=PhonebookAppCluster"
 
 class UserDAO:    
     # Define the init method/class constructor
@@ -21,7 +19,7 @@ class UserDAO:
     # Define the method to insert a new user entry to the database
     def insert_user(self, user):
         # Create a new client and connect to the server
-        client = MongoClient(URI, server_api=ServerApi('1'))
+        client = MongoClient(MONGO_URI, server_api=ServerApi('1'))
         
         # Establish a successful connection
         try:
@@ -32,7 +30,7 @@ class UserDAO:
             collection = database.get_collection("Users")
             
             # Insertion logic
-            result = collection.insert_one({
+            collection.insert_one({
               "_id": user.get_user_id(),
               "username" : user.get_username(),
               "password" : user.get_password() })
@@ -48,7 +46,7 @@ class UserDAO:
         # Create a return object of the query
         result = {}
         # Create a new client and connect to the server
-        client = MongoClient(URI, server_api=ServerApi('1'))
+        client = MongoClient(MONGO_URI, server_api=ServerApi('1'))
         
         # Establish a successful connection
         try:
@@ -75,7 +73,7 @@ class UserDAO:
         # Create a authenication flag
         is_authenticated = False
         # Create a new client and connect to the server
-        client = MongoClient(URI, server_api=ServerApi('1'))
+        client = MongoClient(MONGO_URI, server_api=ServerApi('1'))
         
         # Establish a successful connection
         try:
@@ -90,7 +88,7 @@ class UserDAO:
             
             # Authentication logic
             result = collection.find_one(query_filter)
-            if result != None:
+            if result is not None:
                 if result["username"] == username and result["password"] == password:
                     is_authenticated = True
         except Exception as e:
@@ -103,7 +101,7 @@ class UserDAO:
     # Define the method to update an existing user entry in the database
     def update_user(self, user):
         # Create a new client and connect to the server
-        client = MongoClient(URI, server_api=ServerApi('1'))
+        client = MongoClient(MONGO_URI, server_api=ServerApi('1'))
         
         # Send a ping to confirm a successful connection
         try:
@@ -119,11 +117,10 @@ class UserDAO:
                 "$set": {
                     "username": user.get_username(), 
                     "password": user.get_password()
-                    }
-                }
+                    }}
             
             # Modification logic
-            result = collection.update_one(query_filter, update_operation)
+            collection.update_one(query_filter, update_operation)
         except Exception as e:
             print(e)
         return 1
@@ -131,7 +128,7 @@ class UserDAO:
     # Define the method to delete an existing user entry from the database
     def delete_user(self, user):
         # Create a new client and connect to the server
-        client = MongoClient(URI, server_api=ServerApi('1'))
+        client = MongoClient(MONGO_URI, server_api=ServerApi('1'))
         
         # Establish a successful connection
         try:
@@ -145,7 +142,7 @@ class UserDAO:
             query_filter = { "_id": user.get_user_id() }
             
             # Deletion logic
-            result = collection.delete_one(query_filter)
+            collection.delete_one(query_filter)
         except Exception as e:
             print(e)
         return 1
